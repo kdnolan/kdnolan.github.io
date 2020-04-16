@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/kdnolan
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://kdnolan.com
+  * I am kdnolan (https://keybase.io/kdnolan) on keybase.
+  * I have a public key ASCd57m3j_Im-vxUVQ_SG-ewS2XhaQG2Bs3qYbVBEqpzSQo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012023ff9a1542c831c3194214045ffbfefc8cfc846abe90bd7c14d731627779d0e90a",
+      "host": "keybase.io",
+      "kid": "01209de7b9b78ff226fafc54550fd21be7b04b65e16901b606cdea61b54112aa73490a",
+      "uid": "23a4827dd09446314112479ee6925f19",
+      "username": "kdnolan"
+    },
+    "merkle_root": {
+      "ctime": 1587079154,
+      "hash": "6326b8d5b8d6cc3b9be0fc199107dad5f7648e864aa2f363cf844c8ed0643a99d731c89f1e918c6e4fd9b138c810f6de35c21bc44701210085bc83dfa0c10e6c",
+      "hash_meta": "c174945a6130a315522c065b7659ee2a5b9fdb68b3391bafdf1ebb36c1752a27",
+      "seqno": 15948342
+    },
+    "service": {
+      "entropy": "g8nokfpr2UN2fPE+bxF4fuPy",
+      "hostname": "kdnolan.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.3.0"
+  },
+  "ctime": 1587079160,
+  "expire_in": 504576000,
+  "prev": "72511b8f53fa72091afa0ed026b47c062c3f014ef991c5d08d62f7988c1875ff",
+  "seqno": 54,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgnee5t4/yJvr8VFUP0hvnsEtl4WkBtgbN6mG1QRKqc0kKp3BheWxvYWTESpcCNsQgclEbj1P6cgka+g7QJrR8Biw/AU75kcXQjWL3mIwYdf/EIOBkBP3Uu+HPaKn6sZDypWddsVmHRuxtfCL1uuVAiaYyAgHCo3NpZ8RADFk4z+A1czmhjvTncKujqDQZMxPCaZCG8bWB72SS/iPOsnMq0XI37wY4swi908vh5TX1LVfMVxsWZfnBkTjBDqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIJizvnb83ZDwE1EOPpfJak7QCpnSNtpGlqkqfhQ1ajaqo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/kdnolan
+
+==================================================================
