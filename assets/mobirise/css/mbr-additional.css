@@ -680,7 +680,7 @@ section.lazy-placeholder:after {
   border-bottom-right-radius: 30px;
   min-height: 77px;
   transition: all .3s;
-  background: #ffffff;
+  background: #232323;
 }
 .cid-rLpsgXbTep .navbar:hover {
   opacity: 1;
@@ -688,7 +688,7 @@ section.lazy-placeholder:after {
 }
 .cid-rLpsgXbTep .navbar.opened {
   transition: all .3s;
-  background: #ffffff !important;
+  background: #232323 !important;
 }
 .cid-rLpsgXbTep .navbar .dropdown-item {
   padding: .235rem 1.5rem;
@@ -784,7 +784,7 @@ section.lazy-placeholder:after {
   }
 }
 .cid-rLpsgXbTep .navbar.navbar-short {
-  background: #ffffff !important;
+  background: #232323 !important;
   min-height: 60px;
 }
 .cid-rLpsgXbTep .navbar.navbar-short .navbar-logo img {
@@ -904,7 +904,7 @@ section.lazy-placeholder:after {
   padding: 0.667em 1.667em;
 }
 .cid-rLpsgXbTep .navbar.navbar-expand-lg .dropdown .dropdown-menu {
-  background: #ffffff;
+  background: #232323;
 }
 .cid-rLpsgXbTep .navbar.navbar-expand-lg .dropdown .dropdown-menu .dropdown-submenu {
   margin: 0;
@@ -1642,16 +1642,17 @@ section.lazy-placeholder:after {
   }
 }
 .cid-smzCetWScn .text1 {
-  color: #ffffff;
+  color: #ff8a73;
+  text-align: left;
 }
 .cid-smzCetWScn .item-title {
   color: #ffffff;
 }
 .cid-smzCetWScn H5 {
-  color: #ffffff;
+  color: #ff8a73;
 }
 .cid-smzCetWScn .theme {
-  color: #ffffff;
+  color: #ff8a73;
 }
 .cid-smzCetWScn .copyright > p {
   color: #ff3366;
@@ -1693,7 +1694,7 @@ section.lazy-placeholder:after {
   border-bottom-right-radius: 30px;
   min-height: 77px;
   transition: all .3s;
-  background: #ffffff;
+  background: #232323;
 }
 .cid-rLpsgXbTep .navbar:hover {
   opacity: 1;
@@ -1701,7 +1702,7 @@ section.lazy-placeholder:after {
 }
 .cid-rLpsgXbTep .navbar.opened {
   transition: all .3s;
-  background: #ffffff !important;
+  background: #232323 !important;
 }
 .cid-rLpsgXbTep .navbar .dropdown-item {
   padding: .235rem 1.5rem;
@@ -1797,7 +1798,7 @@ section.lazy-placeholder:after {
   }
 }
 .cid-rLpsgXbTep .navbar.navbar-short {
-  background: #ffffff !important;
+  background: #232323 !important;
   min-height: 60px;
 }
 .cid-rLpsgXbTep .navbar.navbar-short .navbar-logo img {
@@ -1917,7 +1918,7 @@ section.lazy-placeholder:after {
   padding: 0.667em 1.667em;
 }
 .cid-rLpsgXbTep .navbar.navbar-expand-lg .dropdown .dropdown-menu {
-  background: #ffffff;
+  background: #232323;
 }
 .cid-rLpsgXbTep .navbar.navbar-expand-lg .dropdown .dropdown-menu .dropdown-submenu {
   margin: 0;
