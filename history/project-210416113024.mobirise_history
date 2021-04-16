@@ -1,7 +1,7 @@
 {
   "settings": {
     "name": "Site-12-23_0552",
-    "currentPage": "index.html",
+    "currentPage": "VR.html",
     "theme": {
       "name": "techm4",
       "title": "TechM4",
@@ -87,7 +87,7 @@
       }
     ],
     "uniqCompNum": 34,
-    "versionPublish": "5.2.2",
+    "versionPublish": "5.1.4",
     "screenshot": "screenshot.png",
     "imageResize": true,
     "mcShopcart": {
