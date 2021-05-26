@@ -1526,59 +1526,6 @@ section.lazy-placeholder:after {
 .cid-rLpUcyva27 P {
   color: #ffc900;
 }
-.cid-sns5QNyDBT {
-  padding-top: 60px;
-  padding-bottom: 60px;
-  background-color: #ffffff;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-item.open .nav-link:focus,
-.cid-sns5QNyDBT .nav-tabs .nav-link.active:focus {
-  outline: none;
-}
-.cid-sns5QNyDBT .nav-tabs {
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-  border-bottom: none;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-item {
-  padding: .5rem;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-link {
-  color: #000000;
-  font-style: normal;
-  font-weight: 500;
-  background-color: #ffbc00;
-  border-radius: .25rem;
-  transition: all .5s;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-link:hover {
-  cursor: pointer;
-  background-color: #ffffff;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-link.active {
-  font-weight: 500;
-  color: #000000;
-  font-style: normal;
-  background-color: #ffffff;
-  border-color: #ffffff;
-}
-.cid-sns5QNyDBT .nav-tabs .nav-link.active:hover {
-  background-color: #ffffff;
-}
-.cid-sns5QNyDBT P {
-  color: #232323;
-  text-align: left;
-}
-@media (max-width: 576px) {
-  .cid-sns5QNyDBT .nav-tabs {
-    flex-direction: column;
-    justify-content: center;
-  }
-  .cid-sns5QNyDBT .mbr-text,
-  .cid-sns5QNyDBT .nav-link {
-    text-align: center;
-  }
-}
 .cid-snE0XsKLRo {
   padding-top: 45px;
   padding-bottom: 45px;
