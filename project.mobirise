@@ -94,7 +94,9 @@
       "email": "kdnolan@gmail.com",
       "currency": "AUD",
       "popupProduct": true
-    }
+    },
+    "publishType": "local",
+    "publishPath": "@PROJECT_PATH@"
   },
   "pages": {
     "index.html": {
