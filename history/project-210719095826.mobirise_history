@@ -1,6 +1,6 @@
 {
   "settings": {
-    "name": "kdnolan",
+    "name": "Site-12-23_0552",
     "currentPage": "index.html",
     "theme": {
       "name": "techm4",
@@ -96,19 +96,7 @@
       "popupProduct": true
     },
     "publishType": "local",
-    "publishPath": "@PROJECT_PATH@",
-    "cssOptimize": false,
-    "lazyLoad": true,
-    "favicon": false,
-    "mbrsiteDomain": "3rpd5naxzp",
-    "lazyType": "nothing",
-    "robotsSwitcher": false,
-    "sitemapSwitcher": false,
-    "sitemapSwitcherAuto": false,
-    "siteUrl": false,
-    "cookiesAlert": false,
-    "gdpr": false,
-    "pwa-switcher": false
+    "publishPath": "@PROJECT_PATH@"
   },
   "pages": {
     "index.html": {
