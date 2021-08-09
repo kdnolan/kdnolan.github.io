@@ -1584,3 +1584,72 @@ section.lazy-placeholder:after {
   font-size: 60px;
   color: #777;
 }
+.cid-sFxTp3HyDU {
+  padding-top: 120px;
+  padding-bottom: 120px;
+  background: linear-gradient(45deg, #5580ff, #ff9400);
+}
+.cid-sFxTp3HyDU .plan-body .btn-bgr {
+  z-index: 0;
+}
+.cid-sFxTp3HyDU .list-group-item {
+  padding: .5rem 3.25rem;
+}
+.cid-sFxTp3HyDU .price-term {
+  display: block;
+  line-height: 1;
+  margin-top: 0.45rem;
+}
+.cid-sFxTp3HyDU .plan-title {
+  background-color: #4284df;
+}
+.cid-sFxTp3HyDU .plan-header {
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+.cid-sFxTp3HyDU .plan-body {
+  border-radius: 0 0 8px 8px;
+}
+.cid-sFxTp3HyDU .mbr-section-btn {
+  padding: 0 2.45rem;
+}
+.cid-sFxTp3HyDU .plan {
+  position: relative;
+  max-width: 330px;
+  padding-right: 0;
+  padding-left: 0;
+  color: #767676;
+}
+.cid-sFxTp3HyDU .plan .list-group-item {
+  position: relative;
+  -webkit-justify-content: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+}
+.cid-sFxTp3HyDU .plan .list-group-item:last-child {
+  border-radius: 8px;
+}
+.cid-sFxTp3HyDU .plan:nth-child(1) .plan-title {
+  background-color: #ff9400;
+}
+.cid-sFxTp3HyDU .plan-header,
+.cid-sFxTp3HyDU .plan-body {
+  background-color: #f2f6ff;
+  border-bottom: solid 2px rgba(0, 0, 0, 0.07);
+}
+.cid-sFxTp3HyDU .price-figure {
+  font-weight: 600;
+  color: #232323;
+}
+.cid-sFxTp3HyDU .price-value {
+  font-weight: 700;
+  vertical-align: top;
+  line-height: 1;
+  margin-right: 0.25rem;
+}
+@media (max-width: 550px) {
+  .cid-sFxTp3HyDU .price-figure {
+    font-size: 4.25rem;
+  }
+}

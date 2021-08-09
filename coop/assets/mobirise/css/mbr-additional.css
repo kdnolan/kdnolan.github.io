@@ -796,3 +796,15 @@ a {
 .cid-sExX7GXoGO .mbr-section-title {
   color: #ffffff;
 }
+#custom-html-6 {
+  /* Type valid CSS here */
+}
+#custom-html-6 div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-6 p {
+  font-size: 60px;
+  color: #777;
+}
