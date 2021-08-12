@@ -2405,3 +2405,15 @@ section.lazy-placeholder:after {
     font-size: 4.25rem;
   }
 }
+#custom-html-16 {
+  /* Type valid CSS here */
+}
+#custom-html-16 div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-16 p {
+  font-size: 60px;
+  color: #777;
+}
