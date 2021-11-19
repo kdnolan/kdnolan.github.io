@@ -1,9 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=VT323:400&display=swap);
-
-
-
-
-
 body {
   font-family: IBM Plex Sans;
 }
@@ -1526,51 +1520,13 @@ section.lazy-placeholder:after {
 .cid-rLpUcyva27 P {
   color: #ffc900;
 }
-.cid-snE0XsKLRo {
-  padding-top: 45px;
-  padding-bottom: 45px;
-  background-color: #232323;
-}
-.cid-snE0XsKLRo a:link {
-  text-decoration: none;
-}
-.cid-snE0XsKLRo .icon-transition span {
-  color: #ffffff;
-  display: block;
-  height: 3em;
-  line-height: 3em;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  width: 3em;
-  -webkit-transition: all 0.3s ease-out 0s;
-  transition: all 0.3s ease-out 0s;
-  font-size: 14px;
-}
-.cid-snE0XsKLRo .icon-transition span:hover {
+.cid-sPa9ZKjTKh {
+  padding-top: 30px;
+  padding-bottom: 30px;
   background-color: #ffffff;
 }
-.cid-snE0XsKLRo .inner-text {
-  line-height: 3em;
-}
-.cid-snE0XsKLRo .social-media {
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-.cid-snE0XsKLRo .social-media ul {
-  margin: 0;
-  padding: 0;
-  margin-bottom: 8px;
-}
-.cid-snE0XsKLRo .social-media ul li {
-  padding: 4px;
-  display: inline-block;
-}
-.cid-snE0XsKLRo .content-text,
-.cid-snE0XsKLRo .inner-text {
-  color: #c1c1c1;
+.cid-sPa9ZKjTKh .media-container-row .mbr-text {
+  color: #232323;
 }
 .cid-sFyEhR9tpZ .dropdown-item:before {
   content: '';
@@ -1948,17 +1904,13 @@ section.lazy-placeholder:after {
     left: -1rem;
   }
 }
-#custom-html-o {
-  /* Type valid CSS here */
+.cid-sPa9ZKjTKh {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #ffffff;
 }
-#custom-html-o div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-o p {
-  font-size: 60px;
-  color: #777;
+.cid-sPa9ZKjTKh .media-container-row .mbr-text {
+  color: #232323;
 }
 .cid-sFyEhR9tpZ .dropdown-item:before {
   content: '';
@@ -2405,15 +2357,11 @@ section.lazy-placeholder:after {
     font-size: 4.25rem;
   }
 }
-#custom-html-16 {
-  /* Type valid CSS here */
+.cid-sPa9ZKjTKh {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #ffffff;
 }
-#custom-html-16 div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-16 p {
-  font-size: 60px;
-  color: #777;
+.cid-sPa9ZKjTKh .media-container-row .mbr-text {
+  color: #232323;
 }
