@@ -1282,6 +1282,104 @@ section.lazy-placeholder:after {
     display: block;
   }
 }
+.cid-sUyOPXcoHF {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: #000000;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.cid-sUyOPXcoHF .mbr-slider .carousel-control {
+  background: #1b1b1b;
+}
+.cid-sUyOPXcoHF .btn {
+  font-size: 16px;
+  padding: 0.5rem 2rem;
+}
+.cid-sUyOPXcoHF .btn-primary-outline {
+  border: none;
+  color: gray;
+}
+.cid-sUyOPXcoHF .btn-primary-outline:active {
+  color: gray;
+}
+.cid-sUyOPXcoHF .btn-primary-outline:hover {
+  color: white;
+}
+.cid-sUyOPXcoHF div {
+  overflow: hidden;
+}
+.cid-sUyOPXcoHF li.active .btn-primary-outline {
+  color: white;
+}
+.cid-sUyOPXcoHF .mbr-slider .carousel-control-prev {
+  left: 0;
+  margin-left: 2.5rem;
+}
+.cid-sUyOPXcoHF .mbr-slider .carousel-control-next {
+  right: 0;
+  margin-right: 2.5rem;
+}
+.cid-sUyOPXcoHF .mbr-slider .modal-body .close {
+  background: #1b1b1b;
+}
+.cid-sUyOPXcoHF .mbr-gallery-item {
+  overflow: hidden;
+}
+.cid-sUyOPXcoHF .mbr-gallery-item:hover img {
+  transform: scale(1.1);
+}
+.cid-sUyOPXcoHF .mbr-gallery-item img {
+  transition: all 0.3s;
+}
+.cid-sUyOPXcoHF .mbr-gallery-filter {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.cid-sUyOPXcoHF .mbr-gallery-item > div::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background: #ffbc00;
+  opacity: 0;
+  -webkit-transition: 0.2s opacity ease-in-out;
+  transition: 0.2s opacity ease-in-out;
+  background: linear-gradient(to left, #ffbc00, #232323) !important;
+}
+.cid-sUyOPXcoHF .mbr-gallery-item > div:hover .mbr-gallery-title::before {
+  background: transparent !important;
+}
+.cid-sUyOPXcoHF .mbr-gallery-item > div:hover:before {
+  opacity: 0.3 !important;
+}
+.cid-sUyOPXcoHF .mbr-gallery-title {
+  font-size: .9em;
+  position: absolute;
+  display: block;
+  width: 100%;
+  bottom: 0;
+  padding: 1rem;
+  color: #fff;
+  z-index: 2;
+}
+.cid-sUyOPXcoHF .mbr-gallery-title:before {
+  content: " ";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  position: absolute;
+  background: #ffbc00 !important;
+  opacity: 0.3;
+  -webkit-transition: 0.2s background ease-in-out;
+  transition: 0.2s background ease-in-out;
+  background: linear-gradient(to left, #ffbc00, #232323) !important;
+}
 .cid-sUrwRydKzV {
   padding-top: 30px;
   padding-bottom: 30px;
