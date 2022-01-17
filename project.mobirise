@@ -921,7 +921,7 @@
           },
           "_name": "gallery01",
           "_sourceTheme": "techm4",
-          "_customHTML": "<section class=\"mbr-gallery mbr-slider-carousel\" group=\"Sliders & Gallery\" plugins=\"Masonry,BootstrapCarouselSwipe,Gallery,VimeoPlayer,SliderVideo\">\n\n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"checkbox\" title=\"Full Width\" name=\"fullWidth\" checked>\n        <input type=\"range\" title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"range\" title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"color\" title=\"Overlay Color\" name=\"overlayColor\" value=\"#ffbc00\">\n        <input type=\"checkbox\" title=\"Gradient Overlay\" name=\"gradOverlay\" checked>\n        <input type=\"color\" title=\"Overlay Color 2\" name=\"overlayColor2\" value=\"#232323\" condition=\"gradOverlay\">\n        <input type=\"range\" title=\"Overlay Opacity\" name=\"overlayOpacity\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.3\" inline>\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#000000\">\n\n        <input type=\"gallery\" title=\"Gallery\" name=\"gallery\">\n    <!-- End block parameters -->\n    </mbr-parameters>\n\n    <div mbr-class=\"{'container': !fullWidth}\">\n        <div mbr-gallery=\"gallery\" mbr-gallery-spacing=\"0\"></div>\n    </div>\n\n</section>",
+          "_customHTML": "<section class=\"mbr-gallery mbr-slider-carousel\" group=\"Sliders & Gallery\" plugins=\"Masonry,BootstrapCarouselSwipe,Gallery,VimeoPlayer,SliderVideo\">\n\n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"checkbox\" title=\"Full Width\" name=\"fullWidth\" checked>\n        <input type=\"range\" title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"range\" title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"color\" title=\"Overlay Color\" name=\"overlayColor\" value=\"#ffbc00\">\n        <input type=\"checkbox\" title=\"Gradient Overlay\" name=\"gradOverlay\" checked>\n        <input type=\"color\" title=\"Overlay Color 2\" name=\"overlayColor2\" value=\"#232323\" condition=\"gradOverlay\">\n        <input type=\"range\" title=\"Overlay Opacity\" name=\"overlayOpacity\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.3\" inline>\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#000000\">\n\n        <input type=\"gallery\" title=\"Gallery\" name=\"gallery\">\n    <!-- End block parameters -->\n    </mbr-parameters>\n\n    <div mbr-class=\"{'container': !fullWidth}\">\n        <div mbr-gallery=\"gallery\" mbr-gallery-spacing=\"0\" mbr-gallery-show-text></div>\n    </div>\n\n</section>",
           "_cid": "sUyOPXcoHF",
           "_protectedParams": [
             "text_all",
@@ -946,7 +946,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "21BTC Learning space",
+                "caption": "21BTC Learning Space",
                 "active": false
               },
               {
@@ -972,7 +972,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Type caption here",
+                "caption": "Bett Conference",
                 "active": false
               },
               {
@@ -985,12 +985,12 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Type caption here",
+                "caption": "SBS Insight",
                 "active": false
               },
               {
                 "tags": "Awesome",
-                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-6-19-31-22.jpg",
+                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-2-10-9-41.jpg",
                 "playVideo": true,
                 "videoUrl": "https://www.youtube.com/watch?v=rhzbYjaIyEI",
                 "image": "@PROJECT_PATH@/assets/images/gallery05.jpg",
@@ -998,8 +998,8 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Type caption here",
-                "active": true
+                "caption": "Paris-Sorbonne University",
+                "active": false
               },
               {
                 "tags": "Responsive",
@@ -1016,15 +1016,15 @@
               },
               {
                 "tags": "Animated",
-                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-6-16-38-58.jpg",
+                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-2-10-10-3.jpg",
                 "playVideo": true,
-                "videoUrl": "https://www.youtube.com/watch?v=ndrQYiaSV7o",
+                "videoUrl": "https://www.youtube.com/watch?v=dVG8uvAat60",
                 "image": "@PROJECT_PATH@/assets/images/gallery07.jpg",
                 "thumb": "@PROJECT_PATH@/assets/images/gallery07.jpg",
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "USQ Salon",
                 "active": false
               },
               {
@@ -1037,7 +1037,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "LBRY Blockchain CEO Student Interview",
                 "active": false
               },
               {
@@ -1050,7 +1050,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "Stemiverse",
                 "active": false
               },
               {
@@ -1063,7 +1063,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Type caption here",
+                "caption": "Channel 9 - Screens in Schools",
                 "active": false
               },
               {
@@ -1076,7 +1076,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "#WeknowCisco",
                 "active": false
               },
               {
@@ -1089,7 +1089,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "Leveraging Digital",
                 "active": false
               },
               {
@@ -1102,34 +1102,34 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "Minecraft",
                 "active": false
               },
               {
                 "tags": "Animated",
                 "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-6-16-46-56.jpg",
                 "playVideo": true,
-                "videoUrl": "https://www.youtube.com/watch?v=vdX35hXGaKk",
+                "videoUrl": "https://youtu.be/vdX35hXGaKk",
                 "image": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73.png",
                 "thumb": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73-90x73.png",
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "FUTURE SCHOOLS",
                 "active": false
               },
               {
                 "tags": "Animated",
                 "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-6-16-49-12.jpg",
                 "playVideo": true,
-                "videoUrl": "https://www.youtube.com/watch?v=KR4BIWNbEWM",
+                "videoUrl": "https://youtu.be/KR4BIWNbEWM",
                 "image": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73.png",
                 "thumb": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73-90x73.png",
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
-                "active": false
+                "caption": "Blockchain Use Cases&nbsp;<br>",
+                "active": true
               },
               {
                 "tags": "Animated",
@@ -1141,7 +1141,7 @@
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Namebase CEO Education Interview",
+                "caption": "CoderDojo",
                 "active": false
               }
             ]
