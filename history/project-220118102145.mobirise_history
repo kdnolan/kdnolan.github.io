@@ -927,7 +927,6 @@
           "_sourceTheme": "techm4",
           "_customHTML": "<section class=\"mbr-gallery mbr-slider-carousel\" group=\"Sliders & Gallery\" plugins=\"Masonry,BootstrapCarouselSwipe,Gallery,VimeoPlayer,SliderVideo\">\n\n    <mbr-parameters>\n    <!-- Block parameters controls (Blue \"Gear\" panel) -->\n        <input type=\"checkbox\" title=\"Full Width\" name=\"fullWidth\" checked>\n        <input type=\"range\" title=\"Top\" name=\"paddingTop\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"range\" title=\"Bottom\" name=\"paddingBottom\" min=\"0\" max=\"9\" step=\"1\" value=\"0\" inline>\n        <input type=\"color\" title=\"Overlay Color\" name=\"overlayColor\" value=\"#ffbc00\">\n        <input type=\"checkbox\" title=\"Gradient Overlay\" name=\"gradOverlay\" checked>\n        <input type=\"color\" title=\"Overlay Color 2\" name=\"overlayColor2\" value=\"#232323\" condition=\"gradOverlay\">\n        <input type=\"range\" title=\"Overlay Opacity\" name=\"overlayOpacity\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.3\" inline>\n        <input type=\"color\" title=\"Background Color\" name=\"bgColor\" value=\"#000000\">\n\n        <input type=\"gallery\" title=\"Gallery\" name=\"gallery\">\n    <!-- End block parameters -->\n    </mbr-parameters>\n\n    <div mbr-class=\"{'container': !fullWidth}\">\n        <div mbr-gallery=\"gallery\" mbr-gallery-spacing=\"0\" mbr-gallery-show-text></div>\n    </div>\n\n</section>",
           "_cid": "sUyOPXcoHF",
-          "_anchor": "gallery01-1h",
           "_protectedParams": [
             "text_all",
             "gallery__filtersTextStyle",
@@ -1121,20 +1120,20 @@
                 "title": "",
                 "customStyle1": "display-7",
                 "caption": "FUTURE SCHOOLS",
-                "active": true
+                "active": false
               },
               {
                 "tags": "Animated",
-                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022029_1953382022-0-6_19-57-47.jpg",
+                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014_1635442022-0-6_16-49-12.jpg",
                 "playVideo": true,
-                "videoUrl": "https://www.youtube.com/watch?v=zQ04ESjSXvQ",
+                "videoUrl": "https://youtu.be/KR4BIWNbEWM",
                 "image": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73.png",
                 "thumb": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73-90x73.png",
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Bitcoin Center NYC - Wall street&nbsp;<br>",
-                "active": false
+                "caption": "Blockchain Use Cases&nbsp;<br>",
+                "active": true
               },
               {
                 "tags": "Animated",
@@ -1150,7 +1149,8 @@
                 "active": false
               }
             ]
-          }
+          },
+          "_anchor": "gallery01-1h"
         },
         {
           "alias": false,

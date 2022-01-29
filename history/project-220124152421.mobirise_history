@@ -1121,20 +1121,20 @@
                 "title": "",
                 "customStyle1": "display-7",
                 "caption": "FUTURE SCHOOLS",
-                "active": true
+                "active": false
               },
               {
                 "tags": "Animated",
-                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022029_1953382022-0-6_19-57-47.jpg",
+                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022014_1635442022-0-6_16-49-12.jpg",
                 "playVideo": true,
-                "videoUrl": "https://www.youtube.com/watch?v=zQ04ESjSXvQ",
+                "videoUrl": "https://youtu.be/KR4BIWNbEWM",
                 "image": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73.png",
                 "thumb": "@PROJECT_PATH@/assets/images/photo-20160315-8003902-90x73-90x73.png",
                 "alt": "",
                 "title": "",
                 "customStyle1": "display-7",
-                "caption": "Bitcoin Center NYC - Wall street&nbsp;<br>",
-                "active": false
+                "caption": "Blockchain Use Cases&nbsp;<br>",
+                "active": true
               },
               {
                 "tags": "Animated",
