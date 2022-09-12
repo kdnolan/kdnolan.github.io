@@ -106,7 +106,9 @@
     "siteUrl": false,
     "cookiesAlert": false,
     "gdpr": false,
-    "pwa-switcher": false
+    "pwa-switcher": false,
+    "publishType": "local",
+    "publishPath": "@PROJECT_PATH@"
   },
   "pages": {
     "index.html": {
@@ -1043,7 +1045,7 @@
               },
               {
                 "tags": "Animated",
-                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022812-1036422022-8-1-12-11-11.jpg",
+                "videoPreview": "@PROJECT_PATH@/assets/images/mobirise2022812_1036422022-8-1_12-11-11.jpg",
                 "playVideo": true,
                 "videoUrl": "https://youtu.be/uR2qHjZ28g4",
                 "image": "@PROJECT_PATH@/assets/images/mobirise2022014-1635442022-0-6-16-22-59.jpg",
