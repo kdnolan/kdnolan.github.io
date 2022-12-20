@@ -1758,18 +1758,6 @@ section.lazy-placeholder:after {
     left: -1rem;
   }
 }
-#custom-html-o {
-  /* Type valid CSS here */
-}
-#custom-html-o div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-o p {
-  font-size: 60px;
-  color: #777;
-}
 .cid-sUrwRydKzV {
   padding-top: 30px;
   padding-bottom: 30px;
@@ -2222,26 +2210,6 @@ section.lazy-placeholder:after {
   .cid-sFxTp3HyDU .price-figure {
     font-size: 4.25rem;
   }
-}
-.cid-sUrwRydKzV {
-  padding-top: 30px;
-  padding-bottom: 30px;
-  background-color: #f2f6ff;
-}
-.cid-sUrwRydKzV .media-container-row .mbr-text {
-  color: #232323;
-}
-#custom-html-16 {
-  /* Type valid CSS here */
-}
-#custom-html-16 div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-16 p {
-  font-size: 60px;
-  color: #777;
 }
 .cid-sUrwRydKzV {
   padding-top: 30px;
