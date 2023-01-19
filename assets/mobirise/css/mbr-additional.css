@@ -1762,6 +1762,18 @@ section.lazy-placeholder:after {
   font-size: 60px;
   color: #777;
 }
+#custom-html-16 {
+  /* Type valid CSS here */
+}
+#custom-html-16 div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-16 p {
+  font-size: 60px;
+  color: #777;
+}
 .cid-sFyEhR9tpZ .dropdown-item:before {
   content: '';
   position: absolute;
@@ -2138,10 +2150,24 @@ section.lazy-placeholder:after {
     left: -1rem;
   }
 }
+.cid-ttqk7TVkHb {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  background-color: #000000;
+}
+.cid-ttqk7TVkHb .line {
+  background-color: #6592e6;
+  align: center;
+  height: 2px;
+  margin: 0 auto;
+}
+.cid-ttqk7TVkHb .mbr-text {
+  color: #ffffff;
+}
 .cid-sFxTp3HyDU {
   padding-top: 120px;
   padding-bottom: 120px;
-  background: linear-gradient(45deg, #5580ff, #ff9400);
+  background-image: url("../../../assets/images/giphy.gif");
 }
 .cid-sFxTp3HyDU .plan-body .btn-bgr {
   z-index: 0;
@@ -2206,16 +2232,4 @@ section.lazy-placeholder:after {
   .cid-sFxTp3HyDU .price-figure {
     font-size: 4.25rem;
   }
-}
-#custom-html-16 {
-  /* Type valid CSS here */
-}
-#custom-html-16 div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-16 p {
-  font-size: 60px;
-  color: #777;
 }
