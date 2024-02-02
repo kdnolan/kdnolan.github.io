@@ -23,8 +23,8 @@
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
   <link rel="stylesheet" href="assets/animatecss/animate.min.css">
-  <link rel="stylesheet" href="assets/smart-cart/minicart-theme.css">
-    <link rel="stylesheet" href="assets/popup-overlay-plugin/style.css">
+  <link rel="stylesheet" href="assets/popup-overlay-plugin/style.css">
+    <link rel="stylesheet" href="assets/smart-cart/minicart-theme.css">
   <link rel="stylesheet" href="assets/dropdown/css/style.css">
   <link rel="stylesheet" href="assets/theme/css/style.css">
   <link rel="stylesheet" href="assets/gallery/style.css">
@@ -321,6 +321,25 @@
 
 </section>
 
+<div id="custom-html-22"><div id="nostr-embed"></div>
+<script>
+!(function () {
+  const n=document.createElement('script');
+  n.type='text/javascript';
+  n.async=!0;
+  n.src='[4]';
+  n.onload=function () {
+    nostrEmbed.init(
+      'npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q',
+      '#nostr-embed',
+      'wss://relay.nostr.band'
+    );
+  };
+  const a=document.getElementsByTagName('script')[0];
+  a.parentNode.insertBefore(n, a);
+})();
+</script></div>
+
 <section once="" class="cid-tV5cjIel7p mbr-reveal" id="footer01-1s">
 
     
@@ -357,9 +376,9 @@
   <script src="assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/smoothscroll/smooth-scroll.js"></script>
   <script src="assets/viewportchecker/jquery.viewportchecker.js"></script>
-  <script src="assets/smart-cart/minicart.js"></script>
+      <script src="assets/smart-cart/minicart.js"></script>
   <script src="assets/smart-cart/minicart-customizer.js"></script>
-      <script src="assets/dropdown/js/nav-dropdown.js"></script>
+  <script src="assets/dropdown/js/nav-dropdown.js"></script>
   <script src="assets/dropdown/js/navbar-dropdown.js"></script>
   <script src="assets/touchswipe/jquery.touch-swipe.min.js"></script>
   <script src="assets/typed/typed.min.js"></script>
