@@ -1387,7 +1387,7 @@ section.lazy-placeholder:after {
   background-color: #09021f;
 }
 .cid-tV5cjIel7p .media-container-row .mbr-text {
-  text-align: center;
+  text-align: right;
   color: #8e30eb;
 }
 .cid-sFyEhR9tpZ .dropdown-item:before {
@@ -1766,24 +1766,12 @@ section.lazy-placeholder:after {
     left: -1rem;
   }
 }
-#custom-html-o {
-  /* Type valid CSS here */
-}
-#custom-html-o div {
-  padding: 80px 0;
-  color: #777;
-  text-align: center;
-}
-#custom-html-o p {
-  font-size: 60px;
-  color: #777;
-}
 .cid-tV5cjIel7p {
   padding-top: 30px;
   padding-bottom: 30px;
   background-color: #09021f;
 }
 .cid-tV5cjIel7p .media-container-row .mbr-text {
-  text-align: center;
+  text-align: right;
   color: #8e30eb;
 }
