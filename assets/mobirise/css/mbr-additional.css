@@ -1028,14 +1028,14 @@ section.lazy-placeholder:after {
   margin-left: 4px !important;
 }
 .cid-rLpTZ4ZJL0 .animated-element {
-  color: #8e30eb;
+  color: #ffffff;
 }
 .cid-rLpTZ4ZJL0 .typed-cursor {
   opacity: 1;
   -webkit-animation: blink 0.7s infinite;
   -moz-animation: blink 0.7s infinite;
   animation: blink 0.7s infinite;
-  color: #8e30eb;
+  color: #ffffff;
 }
 @keyframes blink {
   0% {
@@ -1786,4 +1786,40 @@ section.lazy-placeholder:after {
 .cid-tV5cjIel7p .media-container-row .mbr-text {
   text-align: right;
   color: #8e30eb;
+}
+#custom-html-28 {
+  /* Type valid CSS here */
+}
+#custom-html-28 div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-28 p {
+  font-size: 60px;
+  color: #777;
+}
+#custom-html-29 {
+  /* Type valid CSS here */
+}
+#custom-html-29 div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-29 p {
+  font-size: 60px;
+  color: #777;
+}
+#custom-html-2a {
+  /* Type valid CSS here */
+}
+#custom-html-2a div {
+  padding: 80px 0;
+  color: #777;
+  text-align: center;
+}
+#custom-html-2a p {
+  font-size: 60px;
+  color: #777;
 }
