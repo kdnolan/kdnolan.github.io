@@ -115,7 +115,9 @@
     "robotsText": "User-agent: *\r\nDisallow: /cgi-bin\r\n",
     "PWA": {
       "enabled": false
-    }
+    },
+    "publishType": "local",
+    "publishPath": "@PROJECT_PATH@"
   },
   "pages": {
     "index.html": {
