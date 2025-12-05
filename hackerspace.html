@@ -22,33 +22,43 @@
                 </div>
                 <button id="refreshBtn" class="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors">
                     <svg id="refreshIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                     </svg>
                     Refresh
                 </button>
             </div>
             <p id="lastUpdate" class="text-sm text-slate-400"></p>
-        </div>
 
-        <div id="error" class="hidden bg-red-900/50 border border-red-600 text-red-200 rounded-lg p-4 mb-6"></div>
-        
-        <div id="loading" class="text-center text-slate-300 py-12">
-            <svg class="w-12 h-12 animate-spin mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            Loading posts...
-        </div>
+            <!-- Loading: PROGRESS BAR -->
+            <div id="loading" class="mt-4">
+                <div class="w-full max-w-md">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-slate-200 text-sm">Loading posts...</span>
+                        <span id="loadingPercent" class="text-slate-400 text-xs">0%</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-900/60 rounded-full overflow-hidden">
+                        <div id="loadingBar"
+                             class="h-full bg-purple-500 rounded-full transition-all duration-200"
+                             style="width: 0%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div id="noPosts" class="hidden text-center text-slate-400 py-12">
-            No posts found with #hackerspace or #boneohackerspace
-        </div>
+            <!-- Error -->
+            <div id="error" class="hidden mt-4 text-red-400 text-sm"></div>
 
-        <div id="posts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        
-        <div id="loadMoreContainer" class="hidden mt-8 text-center">
-            <button id="loadMoreBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg transition-colors font-semibold">
-                Load More Posts
-            </button>
+            <!-- Posts grid -->
+            <div id="posts" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+            <!-- Load more -->
+            <div id="loadMoreContainer" class="mt-6 text-center hidden">
+                <button id="loadMoreBtn"
+                        class="px-4 py-2 text-sm bg-slate-700 hover:bg-slate-600 text-white rounded-lg">
+                    Load more
+                </button>
+            </div>
         </div>
     </div>
 
@@ -64,25 +74,77 @@
             'wss://relay.snort.social'
         ];
 
+        // same NPUB you had before
         const NPUB = 'npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q';
 
-        let pool = new SimplePool();
+        const pool = new SimplePool();
+        const POSTS_PER_PAGE = 9;
+
         let allPosts = [];
         let displayedPosts = [];
         let hexPubkey;
-        const POSTS_PER_PAGE = 9;
+        let loadingInterval;
 
+        // Decode npub to hex
         try {
             const decoded = nip19.decode(NPUB);
             hexPubkey = decoded.data;
             console.log('✓ Converted npub to hex:', hexPubkey);
         } catch (e) {
-            console.error('Failed to decode npub:', e);
-            document.getElementById('error').textContent = 'Error: Invalid npub format';
-            document.getElementById('error').classList.remove('hidden');
+            console.error('Error decoding npub:', e);
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = 'Error: Invalid npub format';
+            errorDiv.classList.remove('hidden');
             document.getElementById('loading').classList.add('hidden');
         }
 
+        /* -------------------------
+         * Progress bar functions
+         * ------------------------- */
+        function startLoadingBar() {
+            const loadingDiv  = document.getElementById('loading');
+            const bar         = document.getElementById('loadingBar');
+            const percentText = document.getElementById('loadingPercent');
+
+            if (!loadingDiv || !bar || !percentText) return;
+
+            loadingDiv.classList.remove('hidden');
+
+            let progress = 0;
+            bar.style.width = '0%';
+            percentText.textContent = '0%';
+
+            if (loadingInterval) clearInterval(loadingInterval);
+
+            loadingInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 10;
+                    if (progress > 90) progress = 90;
+                    bar.style.width = `${progress}%`;
+                    percentText.textContent = `${Math.round(progress)}%`;
+                }
+            }, 200);
+        }
+
+        function finishLoadingBar() {
+            const loadingDiv  = document.getElementById('loading');
+            const bar         = document.getElementById('loadingBar');
+            const percentText = document.getElementById('loadingPercent');
+
+            if (!loadingDiv || !bar || !percentText) return;
+
+            clearInterval(loadingInterval);
+            bar.style.width = '100%';
+            percentText.textContent = '100%';
+
+            setTimeout(() => {
+                loadingDiv.classList.add('hidden');
+            }, 300);
+        }
+
+        /* -------------------------
+         * Helpers
+         * ------------------------- */
         function formatDate(timestamp) {
             return new Date(timestamp * 1000).toLocaleString();
         }
@@ -95,52 +157,39 @@
         function formatContent(content) {
             // Remove image URLs from text since we'll display them separately
             let text = content.replace(/(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp|bmp))/gi, '');
-            
+
             return text
-                .replace(/https?:\/\/[^\s]+/g, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline break-all">${url}</a>`)
+                .replace(/https?:\/\/[^\s]+/g, url => `<a href="${url}" target="_blank" class="text-blue-400 hover:underline break-all">${url}</a>`)
                 .replace(/#\w+/g, tag => `<span class="text-purple-400">${tag}</span>`)
                 .replace(/\n/g, '<br>');
         }
 
         function filterPostsByHashtag(posts) {
             return posts.filter(post => {
-                const content = post.content.toLowerCase();
-                // Match various formats of the hashtags
-                return content.includes('hackerspace') || 
-                       content.includes('boneohackerspace') ||
-                       content.includes('#hackerspace') || 
-                       content.includes('#boneohackerspace');
+                const content = (post.content || '').toLowerCase();
+                return content.includes('hackerspace') || content.includes('boneohackerspace');
             });
         }
 
-        function displayPosts() {
+        function updateLastUpdate() {
+            const el = document.getElementById('lastUpdate');
+            if (!el) return;
+            const now = new Date().toLocaleString();
+            el.textContent = `Last updated: ${now} – Showing ${displayedPosts.length} of ${allPosts.length} posts`;
+        }
+
+        function renderPosts() {
             const postsContainer = document.getElementById('posts');
-            const loadingDiv = document.getElementById('loading');
-            const noPostsDiv = document.getElementById('noPosts');
-            const loadMoreContainer = document.getElementById('loadMoreContainer');
-
-            loadingDiv.classList.add('hidden');
-
-            if (allPosts.length === 0) {
-                noPostsDiv.classList.remove('hidden');
-                loadMoreContainer.classList.add('hidden');
-                return;
-            }
-
-            noPostsDiv.classList.add('hidden');
-            
-            // Show only the first batch of posts
-            displayedPosts = allPosts.slice(0, POSTS_PER_PAGE);
-            
             postsContainer.innerHTML = displayedPosts.map(post => {
-                const images = extractImages(post.content);
-                const formattedText = formatContent(post.content);
-                
+                const images = extractImages(post.content || '');
+                const formattedText = formatContent(post.content || '');
+
                 return `
-                    <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
+                    <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
                         ${images.length > 0 ? `
                             <div class="relative w-full aspect-square bg-slate-900">
-                                <img src="${images[0]}" alt="Post image" class="w-full h-full object-cover" 
+                                <img src="${images[0]}" alt="Post image"
+                                     class="w-full h-full object-cover"
                                      onerror="this.parentElement.style.display='none'">
                             </div>
                         ` : ''}
@@ -155,29 +204,32 @@
                     </div>
                 `;
             }).join('');
+        }
 
-            // Show or hide load more button
+        function updateLoadMoreVisibility() {
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
             if (allPosts.length > displayedPosts.length) {
                 loadMoreContainer.classList.remove('hidden');
             } else {
                 loadMoreContainer.classList.add('hidden');
             }
-
-            document.getElementById('lastUpdate').textContent = `Last updated: ${new Date().toLocaleTimeString()} - Showing ${displayedPosts.length} of ${allPosts.length} posts`;
         }
 
+        /* -------------------------
+         * Fetch posts
+         * ------------------------- */
         async function fetchPosts() {
-            if (!hexPubkey) {
-                return;
-            }
+            if (!hexPubkey) return;
 
             const refreshIcon = document.getElementById('refreshIcon');
-            const errorDiv = document.getElementById('error');
-            
+            const errorDiv    = document.getElementById('error');
+
             refreshIcon.classList.add('animate-spin');
             errorDiv.classList.add('hidden');
             allPosts = [];
+            displayedPosts = [];
 
+            startLoadingBar();
             console.log('📡 Fetching posts from relays...');
 
             try {
@@ -189,74 +241,44 @@
 
                 console.log(`✓ Received ${events.length} total posts`);
 
-                // Filter posts by hashtag
-                const filteredPosts = filterPostsByHashtag(events);
-                console.log(`✓ Filtered to ${filteredPosts.length} posts with #hackerspace or #boneohackerspace`);
+                const filtered = filterPostsByHashtag(events);
+                console.log(`✓ Filtered to ${filtered.length} #hackerspace / #boneohackerspace posts`);
 
-                // Sort by timestamp (newest first)
-                allPosts = filteredPosts.sort((a, b) => b.created_at - a.created_at);
+                filtered.sort((a, b) => b.created_at - a.created_at);
 
-                if (allPosts.length === 0) {
-                    errorDiv.textContent = 'No posts found with #hackerspace or #boneohackerspace tags.';
-                    errorDiv.classList.remove('hidden');
-                }
+                allPosts = filtered;
+                displayedPosts = allPosts.slice(0, POSTS_PER_PAGE);
 
-                displayPosts();
+                renderPosts();
+                updateLoadMoreVisibility();
+                updateLastUpdate();
             } catch (err) {
                 console.error('Error fetching posts:', err);
-                errorDiv.textContent = `Error loading posts: ${err.message}`;
+                errorDiv.textContent = 'Failed to load posts.';
                 errorDiv.classList.remove('hidden');
             } finally {
                 refreshIcon.classList.remove('animate-spin');
+                finishLoadingBar();
             }
         }
 
+        /* -------------------------
+         * Event listeners
+         * ------------------------- */
         document.getElementById('refreshBtn').addEventListener('click', fetchPosts);
-        
+
         document.getElementById('loadMoreBtn').addEventListener('click', () => {
             const currentLength = displayedPosts.length;
             const nextBatch = allPosts.slice(0, currentLength + POSTS_PER_PAGE);
             displayedPosts = nextBatch;
-            
-            const postsContainer = document.getElementById('posts');
-            const loadMoreContainer = document.getElementById('loadMoreContainer');
-            
-            postsContainer.innerHTML = displayedPosts.map(post => {
-                const images = extractImages(post.content);
-                const formattedText = formatContent(post.content);
-                
-                return `
-                    <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
-                        ${images.length > 0 ? `
-                            <div class="relative w-full aspect-square bg-slate-900">
-                                <img src="${images[0]}" alt="Post image" class="w-full h-full object-cover" 
-                                     onerror="this.parentElement.style.display='none'">
-                            </div>
-                        ` : ''}
-                        <div class="p-4 flex-1 flex flex-col">
-                            <div class="text-xs text-slate-400 mb-3">
-                                ${formatDate(post.created_at)}
-                            </div>
-                            <div class="text-slate-100 text-sm whitespace-pre-wrap break-words flex-1">
-                                ${formattedText}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Hide button if all posts are shown
-            if (displayedPosts.length >= allPosts.length) {
-                loadMoreContainer.classList.add('hidden');
-            }
-            
-            document.getElementById('lastUpdate').textContent = `Last updated: ${new Date().toLocaleTimeString()} - Showing ${displayedPosts.length} of ${allPosts.length} posts`;
+            renderPosts();
+            updateLoadMoreVisibility();
+            updateLastUpdate();
         });
 
-        // Initial fetch
+        // Initial fetch + auto-refresh
         if (hexPubkey) {
             fetchPosts();
-            // Auto-refresh every 60 seconds
             setInterval(fetchPosts, 60000);
         }
     </script>
