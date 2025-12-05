@@ -62,6 +62,14 @@
         </div>
     </div>
 
+    <!-- Scroll to top button -->
+    <button id="scrollToTop" 
+            class="fixed bottom-8 right-8 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-all opacity-0 pointer-events-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
     <script type="module">
         import { SimplePool, nip19 } from 'https://esm.sh/nostr-tools@2.10.2';
 
@@ -84,6 +92,7 @@
         let displayedPosts = [];
         let hexPubkey;
         let loadingInterval;
+        let allArticles = [];
 
         // Decode npub to hex
         try {
@@ -154,6 +163,19 @@
             return content.match(imageRegex) || [];
         }
 
+        function extractImagesFromTags(tags) {
+            // Extract images from tags array (used in kind 30023 events)
+            const images = [];
+            if (Array.isArray(tags)) {
+                tags.forEach(tag => {
+                    if (Array.isArray(tag) && tag[0] === 'image' && tag[1]) {
+                        images.push(tag[1]);
+                    }
+                });
+            }
+            return images;
+        }
+
         function formatContent(content) {
             // Remove image URLs from text since we'll display them separately
             let text = content.replace(/(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp|bmp))/gi, '');
@@ -167,7 +189,43 @@
         function filterPostsByHashtag(posts) {
             return posts.filter(post => {
                 const content = (post.content || '').toLowerCase();
-                return content.includes('hackerspace') || content.includes('boneohackerspace');
+                const hasHashtag = content.includes('hackerspace') || content.includes('boneohackerspace');
+                
+                // Check for images in content or tags
+                const contentImages = extractImages(post.content || '').length > 0;
+                const tagImages = extractImagesFromTags(post.tags).length > 0;
+                const hasImages = contentImages || tagImages;
+                
+                return hasHashtag && hasImages;
+            });
+        }
+
+        function filterArticlesByHashtag(articles) {
+            return articles.filter(article => {
+                // Check hashtags in tags array
+                let hasHashtag = false;
+                if (Array.isArray(article.tags)) {
+                    hasHashtag = article.tags.some(tag => {
+                        if (Array.isArray(tag) && tag[0] === 't') {
+                            const hashtag = (tag[1] || '').toLowerCase();
+                            return hashtag === 'hackerspace' || hashtag === 'boneohackerspace';
+                        }
+                        return false;
+                    });
+                }
+                
+                // Also check content
+                if (!hasHashtag) {
+                    const content = (article.content || '').toLowerCase();
+                    hasHashtag = content.includes('hackerspace') || content.includes('boneohackerspace');
+                }
+                
+                // Check for images
+                const contentImages = extractImages(article.content || '').length > 0;
+                const tagImages = extractImagesFromTags(article.tags).length > 0;
+                const hasImages = contentImages || tagImages;
+                
+                return hasHashtag && hasImages;
             });
         }
 
@@ -175,14 +233,60 @@
             const el = document.getElementById('lastUpdate');
             if (!el) return;
             const now = new Date().toLocaleString();
-            el.textContent = `Last updated: ${now} – Showing ${displayedPosts.length} of ${allPosts.length} posts`;
+            const articleCount = allArticles.length;
+            const postCount = allPosts.length - articleCount;
+            el.textContent = `Last updated: ${now} — Showing ${displayedPosts.length} of ${allPosts.length} items (${postCount} posts, ${articleCount} articles)`;
         }
 
         function renderPosts() {
             const postsContainer = document.getElementById('posts');
             postsContainer.innerHTML = displayedPosts.map(post => {
-                const images = extractImages(post.content || '');
+                const isArticle = post.kind === 30023;
+                let images = extractImages(post.content || '');
+                const tagImages = extractImagesFromTags(post.tags);
+                
+                // Combine images from content and tags
+                if (tagImages.length > 0) {
+                    images = [...images, ...tagImages];
+                }
+                
                 const formattedText = formatContent(post.content || '');
+                
+                // Get article title if it's a long-form article
+                let title = '';
+                if (isArticle && Array.isArray(post.tags)) {
+                    const titleTag = post.tags.find(tag => Array.isArray(tag) && tag[0] === 'title');
+                    if (titleTag && titleTag[1]) {
+                        title = titleTag[1];
+                    }
+                }
+                
+                // Generate links
+                let postLink = '';
+                if (isArticle) {
+                    // Generate naddr for articles using nip19
+                    const dTag = post.tags?.find(tag => Array.isArray(tag) && tag[0] === 'd');
+                    if (dTag && dTag[1]) {
+                        try {
+                            const naddr = nip19.naddrEncode({
+                                kind: 30023,
+                                pubkey: post.pubkey,
+                                identifier: dTag[1]
+                            });
+                            postLink = `https://habla.news/a/${naddr}`;
+                        } catch (e) {
+                            console.error('Error encoding naddr:', e);
+                        }
+                    }
+                } else {
+                    // Generate note link for regular posts
+                    try {
+                        const noteId = nip19.noteEncode(post.id);
+                        postLink = `https://primal.net/e/${noteId}`;
+                    } catch (e) {
+                        console.error('Error encoding note:', e);
+                    }
+                }
 
                 return `
                     <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
@@ -194,12 +298,27 @@
                             </div>
                         ` : ''}
                         <div class="p-4 flex-1 flex flex-col">
+                            ${isArticle ? `
+                                <div class="mb-2">
+                                    <span class="inline-block px-2 py-1 text-xs bg-purple-600 text-white rounded">Article</span>
+                                </div>
+                            ` : ''}
+                            ${title ? `
+                                <h3 class="text-lg font-bold text-white mb-2">${title}</h3>
+                            ` : ''}
                             <div class="text-xs text-slate-400 mb-3">
                                 ${formatDate(post.created_at)}
                             </div>
-                            <div class="text-slate-100 text-sm whitespace-pre-wrap break-words flex-1">
+                            <div class="text-slate-100 text-sm whitespace-pre-wrap break-words flex-1 line-clamp-6">
                                 ${formattedText}
                             </div>
+                            ${postLink ? `
+                                <div class="mt-3">
+                                    <a href="${postLink}" target="_blank" class="text-blue-400 hover:underline text-sm">
+                                        ${isArticle ? 'Read full article' : 'View post'} →
+                                    </a>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -208,11 +327,23 @@
 
         function updateLoadMoreVisibility() {
             const loadMoreContainer = document.getElementById('loadMoreContainer');
-            if (allPosts.length > displayedPosts.length) {
-                loadMoreContainer.classList.remove('hidden');
+            // Hide load more button since we're using infinite scroll
+            loadMoreContainer.classList.add('hidden');
+        }
+
+        function loadMorePosts() {
+            const currentLength = displayedPosts.length;
+            
+            // If we've shown all posts, loop back to the beginning
+            if (currentLength >= allPosts.length) {
+                displayedPosts = allPosts.slice(0, POSTS_PER_PAGE);
             } else {
-                loadMoreContainer.classList.add('hidden');
+                const nextBatch = allPosts.slice(0, currentLength + POSTS_PER_PAGE);
+                displayedPosts = nextBatch;
             }
+            
+            renderPosts();
+            updateLastUpdate();
         }
 
         /* -------------------------
@@ -227,12 +358,14 @@
             refreshIcon.classList.add('animate-spin');
             errorDiv.classList.add('hidden');
             allPosts = [];
+            allArticles = [];
             displayedPosts = [];
 
             startLoadingBar();
-            console.log('📡 Fetching posts from relays...');
+            console.log('📡 Fetching posts and articles from relays...');
 
             try {
+                // Fetch regular posts (kind 1)
                 const events = await pool.querySync(RELAYS, {
                     authors: [hexPubkey],
                     kinds: [1],
@@ -242,11 +375,26 @@
                 console.log(`✓ Received ${events.length} total posts`);
 
                 const filtered = filterPostsByHashtag(events);
-                console.log(`✓ Filtered to ${filtered.length} #hackerspace / #boneohackerspace posts`);
+                console.log(`✓ Filtered to ${filtered.length} #hackerspace / #boneohackerspace posts with images`);
 
-                filtered.sort((a, b) => b.created_at - a.created_at);
+                // Fetch long-form articles (kind 30023)
+                const articles = await pool.querySync(RELAYS, {
+                    authors: [hexPubkey],
+                    kinds: [30023],
+                    limit: 100
+                });
 
-                allPosts = filtered;
+                console.log(`✓ Received ${articles.length} total articles`);
+
+                const filteredArticles = filterArticlesByHashtag(articles);
+                console.log(`✓ Filtered to ${filteredArticles.length} #hackerspace / #boneohackerspace articles with images`);
+
+                // Combine posts and articles
+                allArticles = filteredArticles;
+                const combined = [...filtered, ...filteredArticles];
+                combined.sort((a, b) => b.created_at - a.created_at);
+
+                allPosts = combined;
                 displayedPosts = allPosts.slice(0, POSTS_PER_PAGE);
 
                 renderPosts();
@@ -268,12 +416,46 @@
         document.getElementById('refreshBtn').addEventListener('click', fetchPosts);
 
         document.getElementById('loadMoreBtn').addEventListener('click', () => {
-            const currentLength = displayedPosts.length;
-            const nextBatch = allPosts.slice(0, currentLength + POSTS_PER_PAGE);
-            displayedPosts = nextBatch;
-            renderPosts();
-            updateLoadMoreVisibility();
-            updateLastUpdate();
+            loadMorePosts();
+        });
+
+        // Infinite scroll
+        let isLoadingMore = false;
+        window.addEventListener('scroll', () => {
+            if (isLoadingMore) return;
+            
+            const scrollHeight = document.documentElement.scrollHeight;
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const clientHeight = document.documentElement.clientHeight;
+            
+            // Load more when user scrolls to bottom (with 200px threshold)
+            if (scrollTop + clientHeight >= scrollHeight - 200) {
+                isLoadingMore = true;
+                loadMorePosts();
+                setTimeout(() => {
+                    isLoadingMore = false;
+                }, 500);
+            }
+        });
+
+        // Scroll to top button
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                scrollToTopBtn.classList.add('opacity-100');
+            } else {
+                scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                scrollToTopBtn.classList.remove('opacity-100');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // Initial fetch + auto-refresh
