@@ -1,1 +1,235 @@
-npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Neon Space</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      overflow: hidden;
+      background: #000510;
+      font-family: 'Courier New', monospace;
+    }
+
+    #scene {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+
+    #world {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear;
+    }
+
+    /* Stars */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Grid floor */
+    .grid-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #00ffff, transparent);
+      box-shadow: 0 0 20px #00ffff;
+      transform-style: preserve-3d;
+    }
+
+    .grid-line-vertical {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+      box-shadow: 0 0 20px #ff00ff;
+      transform-style: preserve-3d;
+    }
+
+    /* Central text */
+    #central-text {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate3d(-50%, -50%, -500px);
+      font-size: 28px;
+      font-weight: bold;
+      color: #ffff00;
+      text-shadow: 
+        0 0 20px #ffff00,
+        0 0 40px #ffff00,
+        0 0 60px #ffff00,
+        0 0 80px #ffd700;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      animation: glow-pulse 2s infinite alternate;
+      transform-style: preserve-3d;
+      padding: 20px;
+      border: 2px solid #ffff00;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      box-shadow: 
+        0 0 30px rgba(255, 255, 0, 0.5),
+        inset 0 0 20px rgba(255, 255, 0, 0.1);
+    }
+
+    @keyframes glow-pulse {
+      from { 
+        text-shadow: 
+          0 0 20px #ffff00,
+          0 0 40px #ffff00,
+          0 0 60px #ffff00,
+          0 0 80px #ffd700;
+        box-shadow: 
+          0 0 30px rgba(255, 255, 0, 0.5),
+          inset 0 0 20px rgba(255, 255, 0, 0.1);
+      }
+      to { 
+        text-shadow: 
+          0 0 30px #ffff00,
+          0 0 60px #ffff00,
+          0 0 90px #ffff00,
+          0 0 120px #ffd700;
+        box-shadow: 
+          0 0 50px rgba(255, 255, 0, 0.8),
+          inset 0 0 30px rgba(255, 255, 0, 0.2);
+      }
+    }
+
+    /* Giant glowing orb */
+    #giant-orb {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 400px;
+      height: 400px;
+      margin-left: -200px;
+      margin-top: -200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffff00, #ff00ff, #00ffff);
+      transform: translate3d(0, 0, -500px);
+      transform-style: preserve-3d;
+      box-shadow: 
+        0 0 100px rgba(255, 255, 0, 0.8),
+        0 0 200px rgba(255, 0, 255, 0.6),
+        0 0 300px rgba(0, 255, 255, 0.4),
+        inset 0 0 100px rgba(255, 255, 255, 0.3);
+      animation: orb-pulse 3s infinite alternate, orb-rotate 20s linear infinite;
+    }
+
+    @keyframes orb-pulse {
+      from {
+        transform: translate3d(0, 0, -500px) scale(1);
+        box-shadow: 
+          0 0 100px rgba(255, 255, 0, 0.8),
+          0 0 200px rgba(255, 0, 255, 0.6),
+          0 0 300px rgba(0, 255, 255, 0.4),
+          inset 0 0 100px rgba(255, 255, 255, 0.3);
+      }
+      to {
+        transform: translate3d(0, 0, -500px) scale(1.1);
+        box-shadow: 
+          0 0 150px rgba(255, 255, 0, 1),
+          0 0 250px rgba(255, 0, 255, 0.8),
+          0 0 400px rgba(0, 255, 255, 0.6),
+          inset 0 0 150px rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    @keyframes orb-rotate {
+      from { filter: hue-rotate(0deg); }
+      to { filter: hue-rotate(360deg); }
+    }
+
+    /* Smaller floating orbs around the main orb */
+    .small-orb {
+      position: absolute;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 40px currentColor;
+      animation: float-orbit 6s ease-in-out infinite;
+      transform-style: preserve-3d;
+    }
+
+    @keyframes float-orbit {
+      0%, 100% { 
+        transform: translateY(0) translateX(0) translateZ(0);
+      }
+      25% { 
+        transform: translateY(-80px) translateX(80px) translateZ(30px);
+      }
+      50% { 
+        transform: translateY(0) translateX(0) translateZ(60px);
+      }
+      75% { 
+        transform: translateY(80px) translateX(-80px) translateZ(30px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="scene">
+    <div id="world">
+      <div id="giant-orb"></div>
+      <div id="central-text">
+        npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const world = document.getElementById('world');
+    let rotX = 20;
+    let rotY = 0;
+    let posX = 0;
+    let posZ = 0;
+    let mouseX = 0;
+    let mouseY = 0;
+
+
+
+
+
+
+
+    // Mouse look controls
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 50;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 30;
+    });
+
+    // WASD movement
+    const keys = {};
+    document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
+    document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
+
+    function animate() {
+      // Movement
+      if (keys['w']) posZ += 5;
+      if (keys['s']) posZ -= 5;
+      if (keys['a']) posX += 5;
+      if (keys['d']) posX -= 5;
+
+      // Apply transforms
+      rotY = mouseX;
+      rotX = 20 - mouseY;
+
+      world.style.transform = `
+        translateX(${posX}px)
+        translateZ(${posZ}px)
+        rotateX(${rotX}deg)
+        rotateY(${rotY}deg)
+      `;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
