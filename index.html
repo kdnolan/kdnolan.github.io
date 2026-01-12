@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <title>kman2140</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://github.com/kdnolan/kdnolan.github.io/blob/master/avatars/avatar.png?raw=true"
+    />
+
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
     <style>
@@ -29,11 +37,9 @@
           0 0 22px rgba(138, 43, 226, 0.80),
           0 0 34px rgba(138, 43, 226, 0.55);
 
-        /* Allow selection */
         user-select: text;
         -webkit-user-select: text;
 
-        /* Make sure you can drag-select without the 3D canvas stealing the gesture */
         pointer-events: auto;
         z-index: 10;
       }
@@ -56,7 +62,6 @@
         pointer-events: none;
       }
 
-      /* Hidden copy fallback */
       textarea#copyFallback {
         position: fixed;
         left: -9999px;
@@ -96,16 +101,6 @@
         return false;
       }
 
-      // Click-to-copy for 3D text (since selection is via HTML overlay)
-      AFRAME.registerComponent("copy-on-click", {
-        init: function () {
-          this.el.addEventListener("click", async () => {
-            const ok = await copyText(NPUB);
-            showToast(ok ? "Copied npub" : "Copy blocked (best on HTTPS)");
-          });
-        }
-      });
-
       // Cursor: mouse for desktop, gaze for mobile/VR
       AFRAME.registerComponent("auto-cursor", {
         init: function () {
@@ -136,11 +131,9 @@
       });
 
       window.addEventListener("DOMContentLoaded", () => {
-        // Put npub into selectable overlay
         const overlay = document.getElementById("npubOverlay");
         overlay.textContent = NPUB;
 
-        // Optional: click overlay to copy too (nice on mobile)
         overlay.addEventListener("click", async () => {
           const ok = await copyText(NPUB);
           showToast(ok ? "Copied npub" : "Copy blocked (best on HTTPS)");
@@ -157,13 +150,23 @@
 
     <div class="toast" id="toast"></div>
     <div class="hint">
-      Drag to highlight/copy the text (overlay). Click the 3D text or overlay to copy. WASD moves.
+      Drag to highlight/copy the text (overlay). Click the text to copy. WASD moves.
     </div>
 
     <a-scene auto-cursor renderer="colorManagement: true">
       <a-assets>
-        <img id="city" crossorigin="anonymous"
-          src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg" />
+        <img
+          id="city"
+          crossorigin="anonymous"
+          src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg"
+        />
+
+        <!-- Use your GitHub raw PNG directly (fixes “black block” from missing local path) -->
+        <img
+          id="avatar"
+          crossorigin="anonymous"
+          src="https://github.com/kdnolan/kdnolan.github.io/blob/master/avatars/avatar.png?raw=true"
+        />
       </a-assets>
 
       <!-- Camera -->
@@ -174,41 +177,49 @@
       <!-- Background -->
       <a-sky src="#city" rotation="0 -90 0"></a-sky>
 
-      <!-- 3D floating text with fake glow:
-           - purple "glow" behind (bigger, transparent)
-           - white main text in front
-      -->
-      <a-entity position="0 2.05 -2.2" rotation="0 0 0">
-        <!-- Glow layer (purple, slightly behind & bigger) -->
-        <a-entity
-          class="clickable"
-          copy-on-click
-          text="value: npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q;
-                align: center;
-                anchor: center;
-                baseline: center;
-                color: #8A2BE2;
-                width: 6.0;
-                wrapCount: 999"
-          position="0 0 -0.02"
-          scale="1.12 1.12 1.12"
-          material="opacity: 0.55"
-        ></a-entity>
 
-        <!-- Main layer (white) -->
-        <a-entity
-          class="clickable"
-          copy-on-click
-          text="value: npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q;
-                align: center;
-                anchor: center;
-                baseline: center;
-                color: #FFFFFF;
-                width: 6.0;
-                wrapCount: 999"
-          position="0 0 0"
-        ></a-entity>
-      </a-entity>
+     <!-- Ethereal avatar (close, crisp, not pixelated) -->
+<a-entity
+  position="0 1.7 -7"
+  look-at="[camera]"
+  animation="
+    property: position;
+    dir: alternate;
+    dur: 5000;
+    easing: easeInOutSine;
+    loop: true;
+    to: 0 1.95 -7">
+
+  <!-- Glow (kept subtle so it doesn't magnify pixels) -->
+  <a-image
+    src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
+    width="2.1"
+    height="2.1"
+    position="0 0 -0.03"
+    transparent="true"
+    material="
+      shader: flat;
+      opacity: 0.15;
+      side: double;
+      alphaTest: 0.08">
+  </a-image>
+
+  <!-- Main avatar -->
+  <a-image
+    src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
+    width="1.9"
+    height="1.9"
+    transparent="true"
+    material="
+      shader: flat;
+      opacity: 0.95;
+      side: double;
+      alphaTest: 0.08">
+  </a-image>
+
+</a-entity>
+
+
 
       <a-entity light="type: ambient; intensity: 0.9"></a-entity>
     </a-scene>
