@@ -5,7 +5,7 @@
   <title>kman2140</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Favicon -->
+  <!-- Favicon (leave as-is, or swap if you want) -->
   <link
     rel="icon"
     type="image/png"
@@ -64,10 +64,7 @@
       max-width: 640px;
     }
 
-    .hint {
-      bottom: calc(12px + env(safe-area-inset-bottom));
-    }
-
+    .hint { bottom: calc(12px + env(safe-area-inset-bottom)); }
     .toast {
       bottom: calc(56px + env(safe-area-inset-bottom));
       opacity: 0;
@@ -75,11 +72,7 @@
       pointer-events: none;
     }
 
-    textarea#copyFallback {
-      position: fixed;
-      left: -9999px;
-      top: -9999px;
-    }
+    textarea#copyFallback { position: fixed; left: -9999px; top: -9999px; }
 
     /* Phone-specific tightening */
     @media (max-width: 520px) {
@@ -91,11 +84,8 @@
         line-height: 1.22;
       }
     }
-
     @media (max-width: 360px) {
-      .selectable {
-        font-size: clamp(11px, 4.6vw, 15px);
-      }
+      .selectable { font-size: clamp(11px, 4.6vw, 15px); }
     }
   </style>
 
@@ -154,6 +144,43 @@
       }
     });
 
+    // Subtle parallax between sky + avatar based on camera movement
+    AFRAME.registerComponent("parallax-sky", {
+      schema: { yawFactor: {type: "number", default: 0.06} },
+      init: function () {
+        this.cam = this.el.sceneEl.querySelector("[camera]");
+        this.baseRot = this.el.object3D.rotation.clone();
+      },
+      tick: function () {
+        if (!this.cam) return;
+        const yaw = this.cam.object3D.rotation.y; // radians
+        // Drift sky slightly opposite to camera yaw for depth illusion
+        this.el.object3D.rotation.y = this.baseRot.y + (-yaw * this.data.yawFactor);
+      }
+    });
+
+    AFRAME.registerComponent("parallax-avatar", {
+      schema: {
+        factor: {type: "number", default: 0.18},     // how much the avatar shifts vs camera x/z
+        maxShift: {type: "number", default: 0.35}    // clamp so it stays subtle
+      },
+      init: function () {
+        this.camRig = this.el.sceneEl.querySelector("#camRig");
+        this.basePos = this.el.object3D.position.clone();
+      },
+      tick: function () {
+        if (!this.camRig) return;
+        const p = this.camRig.object3D.position;
+
+        // Shift opposite your movement so the avatar feels closer than the sky
+        const sx = THREE.MathUtils.clamp(-p.x * this.data.factor, -this.data.maxShift, this.data.maxShift);
+        const sz = THREE.MathUtils.clamp(-p.z * this.data.factor, -this.data.maxShift, this.data.maxShift);
+
+        this.el.object3D.position.x = this.basePos.x + sx;
+        this.el.object3D.position.z = this.basePos.z + sz;
+      }
+    });
+
     window.addEventListener("DOMContentLoaded", () => {
       const overlay = document.getElementById("npubOverlay");
       overlay.textContent = NPUB;
@@ -181,40 +208,42 @@
         crossorigin="anonymous"
         src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg"
       />
+
+      <!-- Laser eyes avatar (use RAW githubusercontent to avoid black-box) -->
+      <img
+        id="laser"
+        crossorigin="anonymous"
+        src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/lasereyes.jpeg"
+      />
     </a-assets>
 
-    <!-- Camera -->
-    <a-entity position="0 1.6 0">
+    <!-- Camera rig (so parallax can read WASD movement cleanly) -->
+    <a-entity id="camRig" position="0 1.6 0">
       <a-camera wasd-controls="acceleration: 18"></a-camera>
     </a-entity>
 
-    <!-- Sky -->
-    <a-sky src="#city" rotation="0 -90 0"></a-sky>
+    <!-- Sky with subtle parallax drift -->
+    <a-sky src="#city" rotation="0 -90 0" parallax-sky="yawFactor: 0.06"></a-sky>
 
-    <!-- Avatar (closer, clean, no distractions) -->
+    <!-- Avatar (closer) with subtle parallax -->
     <a-entity
-      position="0 1.68 -4.8"
+      parallax-avatar="factor: 0.18; maxShift: 0.35"
+      position="0 1.68 -4.0"
       look-at="[camera]"
-      animation="property: position; dir: alternate; dur: 4600; easing: easeInOutSine; loop: true; to: 0 1.92 -4.8">
+      animation="property: position; dir: alternate; dur: 4200; easing: easeInOutSine; loop: true; to: 0 1.92 -4.0">
 
-      <!-- Soft glow -->
-      <a-image
-        src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
-        width="1.8"
-        height="1.8"
+      <!-- Purple halo (circle behind) -->
+      <a-entity
+        geometry="primitive: circle; radius: 0.95"
         position="0 0 -0.03"
-        transparent="true"
-        material="shader: flat; opacity: 0.14; side: double; alphaTest: 0.08">
-      </a-image>
+        material="shader: flat; color: #8A2BE2; opacity: 0.14; transparent: true; side: double">
+      </a-entity>
 
-      <!-- Main avatar -->
-      <a-image
-        src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
-        width="1.55"
-        height="1.55"
-        transparent="true"
-        material="shader: flat; opacity: 0.96; side: double; alphaTest: 0.08">
-      </a-image>
+      <!-- Main laser-eyes avatar (circle mask) -->
+      <a-entity
+        geometry="primitive: circle; radius: 0.82"
+        material="shader: flat; src: #laser; opacity: 0.98; transparent: true; side: double">
+      </a-entity>
     </a-entity>
 
     <a-entity light="type: ambient; intensity: 0.9"></a-entity>
