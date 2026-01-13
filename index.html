@@ -1,227 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>kman2140</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <title>kman2140</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Favicon -->
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://github.com/kdnolan/kdnolan.github.io/blob/master/avatars/avatar.png?raw=true"
-    />
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    type="image/png"
+    href="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
+  />
 
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-    <style>
-      html, body { margin: 0; height: 100%; background: #000; }
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; }
 
-      /* Selectable overlay text so you can highlight + copy */
+    /* NPUB overlay (responsive, fits phone + desktop) */
+    .selectable {
+      position: fixed;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+
+      max-width: min(1000px, 92vw);
+      padding: 12px 14px;
+      border-radius: 14px;
+
+      background: transparent;
+      color: white;
+
+      font: 700 clamp(14px, 2.8vw, 22px) / 1.25
+        ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, "Liberation Mono", "Courier New", monospace;
+
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      text-align: center;
+
+      text-shadow:
+        0 0 10px rgba(138, 43, 226, 0.95),
+        0 0 22px rgba(138, 43, 226, 0.8),
+        0 0 34px rgba(138, 43, 226, 0.55);
+
+      user-select: text;
+      -webkit-user-select: text;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    .hint, .toast {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font: 14px system-ui, sans-serif;
+      z-index: 11;
+      max-width: 640px;
+    }
+
+    .hint {
+      bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .toast {
+      bottom: calc(56px + env(safe-area-inset-bottom));
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events: none;
+    }
+
+    textarea#copyFallback {
+      position: fixed;
+      left: -9999px;
+      top: -9999px;
+    }
+
+    /* Phone-specific tightening */
+    @media (max-width: 520px) {
       .selectable {
-        position: fixed;
-        left: 50%;
-        top: 45%;
-        transform: translate(-50%, -50%);
-        max-width: min(1200px, 92vw);
-        padding: 10px 14px;
-        border-radius: 14px;
-        background: rgba(0, 0, 0, 0.0); /* transparent */
-        color: white;
-        font: 700 28px/1.25 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        letter-spacing: 0.2px;
-
-        /* Glow */
-        text-shadow:
-          0 0 10px rgba(138, 43, 226, 0.95),
-          0 0 22px rgba(138, 43, 226, 0.80),
-          0 0 34px rgba(138, 43, 226, 0.55);
-
-        user-select: text;
-        -webkit-user-select: text;
-
-        pointer-events: auto;
-        z-index: 10;
-      }
-
-      .hint, .toast {
-        position: fixed;
-        left: 12px;
+        top: 44%;
+        max-width: 94vw;
         padding: 10px 12px;
-        border-radius: 10px;
-        background: rgba(0,0,0,0.55);
-        color: #fff;
-        font: 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        z-index: 11;
+        font-size: clamp(12px, 4.2vw, 16px);
+        line-height: 1.22;
       }
-      .hint { bottom: 12px; }
-      .toast {
-        bottom: 56px;
-        opacity: 0;
-        transition: opacity .25s ease;
-        pointer-events: none;
+    }
+
+    @media (max-width: 360px) {
+      .selectable {
+        font-size: clamp(11px, 4.6vw, 15px);
       }
+    }
+  </style>
 
-      textarea#copyFallback {
-        position: fixed;
-        left: -9999px;
-        top: -9999px;
-        opacity: 0;
-      }
-    </style>
+  <script>
+    const NPUB =
+      "npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q";
 
-    <script>
-      const NPUB = "npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q";
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.opacity = "1";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => (t.style.opacity = "0"), 1400);
+    }
 
-      function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.style.opacity = "1";
-        clearTimeout(window.__toastTimer);
-        window.__toastTimer = setTimeout(() => (t.style.opacity = "0"), 1400);
-      }
-
-      async function copyText(text) {
-        try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(text);
-            return true;
-          }
-        } catch (e) {}
-
-        try {
-          const ta = document.getElementById("copyFallback");
-          ta.value = text;
-          ta.focus();
-          ta.select();
-          ta.setSelectionRange(0, ta.value.length);
-          return !!document.execCommand("copy");
-        } catch (e) {}
-
-        return false;
-      }
-
-      // Cursor: mouse for desktop, gaze for mobile/VR
-      AFRAME.registerComponent("auto-cursor", {
-        init: function () {
-          const scene = this.el;
-          const isMobile = AFRAME.utils.device.isMobile();
-          const cam = scene.querySelector("[camera]");
-          if (!cam) return;
-
-          if (!isMobile) {
-            const cur = document.createElement("a-entity");
-            cur.setAttribute("cursor", "rayOrigin: mouse; fuse: false");
-            cur.setAttribute("raycaster", "objects: .clickable");
-            scene.appendChild(cur);
-          } else {
-            let gaze = cam.querySelector(".gaze-cursor");
-            if (!gaze) {
-              gaze = document.createElement("a-entity");
-              gaze.className = "gaze-cursor";
-              gaze.setAttribute("cursor", "fuse: true; fuseTimeout: 750");
-              gaze.setAttribute("position", "0 0 -1");
-              gaze.setAttribute("geometry", "primitive: ring; radiusInner: 0.012; radiusOuter: 0.02");
-              gaze.setAttribute("material", "shader: flat; opacity: 0.95; color: white");
-              gaze.setAttribute("raycaster", "objects: .clickable");
-              cam.appendChild(gaze);
-            }
-          }
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
         }
-      });
+      } catch {}
 
-      window.addEventListener("DOMContentLoaded", () => {
-        const overlay = document.getElementById("npubOverlay");
-        overlay.textContent = NPUB;
+      try {
+        const ta = document.getElementById("copyFallback");
+        ta.value = text;
+        ta.select();
+        return document.execCommand("copy");
+      } catch {}
 
-        overlay.addEventListener("click", async () => {
-          const ok = await copyText(NPUB);
-          showToast(ok ? "Copied npub" : "Copy blocked (best on HTTPS)");
-        });
-      });
-    </script>
-  </head>
+      return false;
+    }
 
-  <body>
-    <textarea id="copyFallback" aria-hidden="true"></textarea>
+    // Cursor: mouse (desktop), gaze (mobile)
+    AFRAME.registerComponent("auto-cursor", {
+      init: function () {
+        const scene = this.el;
+        const cam = scene.querySelector("[camera]");
+        if (!cam) return;
 
-    <!-- Selectable text overlay (highlight/copy) -->
-    <div id="npubOverlay" class="selectable" title="Click to copy, or drag to highlight"></div>
+        if (!AFRAME.utils.device.isMobile()) {
+          const cur = document.createElement("a-entity");
+          cur.setAttribute("cursor", "rayOrigin: mouse; fuse: false");
+          cur.setAttribute("raycaster", "objects: .clickable");
+          scene.appendChild(cur);
+        } else {
+          const gaze = document.createElement("a-entity");
+          gaze.className = "gaze-cursor";
+          gaze.setAttribute("cursor", "fuse: true; fuseTimeout: 700");
+          gaze.setAttribute("position", "0 0 -1");
+          gaze.setAttribute("geometry", "primitive: ring; radiusInner: 0.012; radiusOuter: 0.02");
+          gaze.setAttribute("material", "shader: flat; color: white; opacity: 0.95");
+          gaze.setAttribute("raycaster", "objects: .clickable");
+          cam.appendChild(gaze);
+        }
+      }
+    });
 
-    <div class="toast" id="toast"></div>
-    <div class="hint">
-      Drag to highlight/copy the text (overlay). Click the text to copy. WASD moves.
-    </div>
+    window.addEventListener("DOMContentLoaded", () => {
+      const overlay = document.getElementById("npubOverlay");
+      overlay.textContent = NPUB;
+      overlay.onclick = async () => {
+        const ok = await copyText(NPUB);
+        showToast(ok ? "Copied npub" : "Copy blocked");
+      };
+    });
+  </script>
+</head>
 
-    <a-scene auto-cursor renderer="colorManagement: true">
-      <a-assets>
-        <img
-          id="city"
-          crossorigin="anonymous"
-          src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg"
-        />
+<body>
+  <textarea id="copyFallback"></textarea>
 
-        <!-- Use your GitHub raw PNG directly (fixes “black block” from missing local path) -->
-        <img
-          id="avatar"
-          crossorigin="anonymous"
-          src="https://github.com/kdnolan/kdnolan.github.io/blob/master/avatars/avatar.png?raw=true"
-        />
-      </a-assets>
+  <div id="npubOverlay" class="selectable" title="Tap/click to copy, or drag to highlight"></div>
+  <div id="toast" class="toast"></div>
+  <div class="hint">
+    Desktop: WASD + mouse · Mobile: drag to look · Tap NPUB to copy
+  </div>
 
-      <!-- Camera -->
-      <a-entity position="0 1.6 0">
-        <a-camera wasd-controls="acceleration: 18"></a-camera>
-      </a-entity>
+  <a-scene auto-cursor renderer="colorManagement: true; pixelRatio: devicePixelRatio">
+    <a-assets>
+      <img
+        id="city"
+        crossorigin="anonymous"
+        src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg"
+      />
+    </a-assets>
 
-      <!-- Background -->
-      <a-sky src="#city" rotation="0 -90 0"></a-sky>
+    <!-- Camera -->
+    <a-entity position="0 1.6 0">
+      <a-camera wasd-controls="acceleration: 18"></a-camera>
+    </a-entity>
 
+    <!-- Sky -->
+    <a-sky src="#city" rotation="0 -90 0"></a-sky>
 
-     <!-- Ethereal avatar (close, crisp, not pixelated) -->
-<a-entity
-  position="0 1.7 -7"
-  look-at="[camera]"
-  animation="
-    property: position;
-    dir: alternate;
-    dur: 5000;
-    easing: easeInOutSine;
-    loop: true;
-    to: 0 1.95 -7">
+    <!-- Avatar (closer, clean, no distractions) -->
+    <a-entity
+      position="0 1.68 -4.8"
+      look-at="[camera]"
+      animation="property: position; dir: alternate; dur: 4600; easing: easeInOutSine; loop: true; to: 0 1.92 -4.8">
 
-  <!-- Glow (kept subtle so it doesn't magnify pixels) -->
-  <a-image
-    src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
-    width="2.1"
-    height="2.1"
-    position="0 0 -0.03"
-    transparent="true"
-    material="
-      shader: flat;
-      opacity: 0.15;
-      side: double;
-      alphaTest: 0.08">
-  </a-image>
+      <!-- Soft glow -->
+      <a-image
+        src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
+        width="1.8"
+        height="1.8"
+        position="0 0 -0.03"
+        transparent="true"
+        material="shader: flat; opacity: 0.14; side: double; alphaTest: 0.08">
+      </a-image>
 
-  <!-- Main avatar -->
-  <a-image
-    src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
-    width="1.9"
-    height="1.9"
-    transparent="true"
-    material="
-      shader: flat;
-      opacity: 0.95;
-      side: double;
-      alphaTest: 0.08">
-  </a-image>
+      <!-- Main avatar -->
+      <a-image
+        src="https://raw.githubusercontent.com/kdnolan/kdnolan.github.io/master/avatars/avatar.png"
+        width="1.55"
+        height="1.55"
+        transparent="true"
+        material="shader: flat; opacity: 0.96; side: double; alphaTest: 0.08">
+      </a-image>
+    </a-entity>
 
-</a-entity>
-
-
-
-      <a-entity light="type: ambient; intensity: 0.9"></a-entity>
-    </a-scene>
-  </body>
+    <a-entity light="type: ambient; intensity: 0.9"></a-entity>
+  </a-scene>
+</body>
 </html>
