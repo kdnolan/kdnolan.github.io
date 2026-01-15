@@ -257,15 +257,9 @@
       try {
         let encryptedContent;
         if (window.nostr && !userPrivateKey) {
-          // Try NIP-44 first, fallback to NIP-04
-          if (window.nostr.nip44) {
-            encryptedContent = await window.nostr.nip44.encrypt(RECIPIENT_PUBKEY, message);
-          } else {
-            encryptedContent = await window.nostr.nip04.encrypt(RECIPIENT_PUBKEY, message);
-          }
+          encryptedContent = await window.nostr.nip04.encrypt(RECIPIENT_PUBKEY, message);
         } else {
-          // Use NIP-44 encryption
-          encryptedContent = await NostrTools.nip44.encrypt(userPrivateKey, RECIPIENT_PUBKEY, message);
+          encryptedContent = await NostrTools.nip04.encrypt(userPrivateKey, RECIPIENT_PUBKEY, message);
         }
         const event = {
           kind: 4,
@@ -282,12 +276,10 @@
           event.sig = NostrTools.signEvent(event, userPrivateKey);
           signedEvent = event;
         }
-        
-        // Use SimplePool to publish
-        const pool = new NostrTools.SimplePool();
-        await pool.publish(DEFAULT_RELAYS, signedEvent);
-        pool.close(DEFAULT_RELAYS);
-        
+        const relay = NostrTools.relayInit(DEFAULT_RELAYS[0]);
+        await relay.connect();
+        await relay.publish(signedEvent);
+        relay.close();
         addMessage(message, 'sent');
         input.value = '';
       } catch (err) {
