@@ -517,10 +517,10 @@ const RECIPIENT_HEX = 'c13fd380165430e4d11ac3c2823597963f5398f035573a2d5464b7e16
 // Relay list
 const RELAYS = [
   'wss://relay.damus.io',
-  'wss://relay.nostr.band',
+  'wss://relay.primal.net',
   'wss://nos.lol',
-  'wss://relay.snort.social',
-  'wss://nostr.wine'
+  'wss://relay.nostr.band',
+  'wss://purplepag.es'
 ];
 
 let userPubkey = null;
@@ -625,11 +625,17 @@ async function sendDM() {
 
     // Sign via extension
     const signedEvent = await window.nostr.signEvent(event);
+    console.log('[nostr] signed event:', signedEvent);
 
     // Publish to relays
     btn.innerHTML = '📡 publishing...';
     let published = 0;
-    const promises = RELAYS.map(url => publishToRelay(url, signedEvent).then(() => published++).catch(() => {}));
+    let errors = [];
+    const promises = RELAYS.map(url =>
+      publishToRelay(url, signedEvent)
+        .then(() => { published++; console.log('[nostr] published to:', url); })
+        .catch((e) => { errors.push(url.replace('wss://','')+': '+(e.message||'failed')); })
+    );
     await Promise.allSettled(promises);
 
     if (published > 0) {
@@ -637,7 +643,8 @@ async function sendDM() {
       document.getElementById('msgContent').value = '';
       document.getElementById('senderName').value = '';
     } else {
-      showStatus('failed to publish to any relay. try again.', 'error');
+      console.error('[nostr] all relays failed:', errors);
+      showStatus('failed to publish. check console for details. errors: ' + errors.join('; '), 'error');
     }
   } catch (e) {
     showStatus('error: ' + (e.message || 'encryption failed'), 'error');
@@ -649,27 +656,56 @@ async function sendDM() {
 
 function publishToRelay(url, event) {
   return new Promise((resolve, reject) => {
-    const ws = new WebSocket(url);
-    const timeout = setTimeout(() => { ws.close(); reject(); }, 5000);
+    let ws;
+    const timeout = setTimeout(() => {
+      console.warn('[nostr] timeout:', url);
+      try { ws.close(); } catch(e) {}
+      reject(new Error('timeout'));
+    }, 8000);
+
+    try {
+      ws = new WebSocket(url);
+    } catch(e) {
+      clearTimeout(timeout);
+      console.error('[nostr] ws create failed:', url, e);
+      reject(e);
+      return;
+    }
 
     ws.onopen = () => {
+      console.log('[nostr] connected:', url);
       ws.send(JSON.stringify(['EVENT', event]));
     };
+
     ws.onmessage = (msg) => {
       try {
         const data = JSON.parse(msg.data);
-        if (data[0] === 'OK' && data[2] === true) {
+        console.log('[nostr] response from', url, ':', data);
+
+        if (data[0] === 'OK') {
           clearTimeout(timeout);
           ws.close();
-          resolve();
-        } else if (data[0] === 'OK') {
-          clearTimeout(timeout);
-          ws.close();
-          reject();
+          if (data[2] === true) {
+            resolve();
+          } else {
+            reject(new Error(data[3] || 'rejected'));
+          }
         }
-      } catch(e) {}
+        // Ignore NOTICE, AUTH, EOSE etc
+      } catch(e) {
+        console.error('[nostr] parse error:', url, e);
+      }
     };
-    ws.onerror = () => { clearTimeout(timeout); reject(); };
+
+    ws.onerror = (e) => {
+      console.error('[nostr] ws error:', url, e);
+      clearTimeout(timeout);
+      reject(new Error('connection error'));
+    };
+
+    ws.onclose = () => {
+      clearTimeout(timeout);
+    };
   });
 }
 
