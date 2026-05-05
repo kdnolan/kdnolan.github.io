@@ -319,6 +319,17 @@
     line-height: 1.5;
   }
 
+  .recipient-display {
+    padding: 10px 14px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(247,147,26,0.2);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
   /* Send button */
   .send-btn {
     width: 100%;
@@ -487,6 +498,10 @@
 
     <div class="form-body">
       <div class="field">
+        <label>to</label>
+        <div class="recipient-display">kman2140</div>
+      </div>
+      <div class="field">
         <label>your npub or name <span style="color:var(--text-muted)">(optional)</span></label>
         <input type="text" id="senderName" placeholder="npub1... or your name">
       </div>
@@ -514,19 +529,20 @@
 const RECIPIENT_NPUB = 'npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q';
 const RECIPIENT_HEX = 'c13fd380165430e4d11ac3c2823597963f5398f035573a2d5464b7e16d1836ea';
 
-// Relay list
-const RELAYS = [
+// Default relays (known to accept kind:4)
+const DEFAULT_RELAYS = [
   'wss://relay.damus.io',
   'wss://relay.primal.net',
   'wss://nos.lol',
-  'wss://relay.nostr.band',
-  'wss://purplepag.es'
+  'wss://relay.nostr.band'
 ];
 
 let userPubkey = null;
+let allRelays = [...DEFAULT_RELAYS];
 
 // Check for NIP-07 extension
-function checkExtension() {
+let extChecks = 0;
+function tryCheckExtension() {
   const dot = document.getElementById('statusDot');
   const label = document.getElementById('authLabel');
   const btn = document.getElementById('signInBtn');
@@ -534,26 +550,21 @@ function checkExtension() {
   if (window.nostr) {
     dot.style.background = 'var(--accent)';
     dot.style.boxShadow = '0 0 8px var(--accent-dim)';
-    label.textContent = 'extension detected';
+    label.textContent = 'extension detected · click to sign in';
     label.style.color = 'var(--accent)';
     btn.disabled = false;
+    return;
+  }
+  extChecks++;
+  if (extChecks < 20) {
+    setTimeout(tryCheckExtension, 300);
   } else {
     label.textContent = 'no nostr extension found';
     label.style.color = 'var(--red)';
     btn.disabled = true;
   }
 }
-
-// Retry extension detection (some load slowly)
-let extChecks = 0;
-function tryCheckExtension() {
-  checkExtension();
-  extChecks++;
-  if (!window.nostr && extChecks < 10) {
-    setTimeout(tryCheckExtension, 500);
-  }
-}
-setTimeout(tryCheckExtension, 300);
+setTimeout(tryCheckExtension, 200);
 
 // Sign in via NIP-07
 async function signIn() {
@@ -571,22 +582,38 @@ async function signIn() {
     label.style.color = 'var(--green)';
     document.getElementById('signInBtn').style.display = 'none';
 
-    // Show truncated npub
-    const npub = hexToNpub(userPubkey) || userPubkey;
     info.style.display = 'block';
-    info.textContent = '✓ ' + npub.substring(0, 20) + '...' + npub.substring(npub.length - 8);
+    info.textContent = '\u2713 ' + userPubkey.substring(0, 16) + '...' + userPubkey.substring(userPubkey.length - 8);
 
     sendBtn.disabled = false;
+
+    // Try to get user's relays from extension
+    try {
+      if (window.nostr.getRelays) {
+        const extRelays = await window.nostr.getRelays();
+        if (extRelays && typeof extRelays === 'object') {
+          for (const [url, policy] of Object.entries(extRelays)) {
+            if (policy && policy.write && !allRelays.includes(url)) {
+              allRelays.push(url);
+            }
+          }
+          console.log('[nostr] relay list (default + extension):', allRelays);
+        }
+      }
+    } catch(e) {
+      console.log('[nostr] could not get extension relays:', e);
+    }
+
   } catch (e) {
     label.textContent = 'sign-in cancelled';
     label.style.color = 'var(--red)';
+    console.error('[nostr] sign-in error:', e);
   }
 }
 
 // Send NIP-04 encrypted DM
 async function sendDM() {
   const btn = document.getElementById('sendBtn');
-  const status = document.getElementById('msgStatus');
   const content = document.getElementById('msgContent').value.trim();
   const senderName = document.getElementById('senderName').value.trim();
 
@@ -600,58 +627,92 @@ async function sendDM() {
   }
 
   btn.disabled = true;
-  btn.innerHTML = '⏳ encrypting...';
-  status.className = 'msg-status';
-  status.style.display = 'none';
 
   try {
-    // Build message with optional sender name prefix
+    // Step 1: Encrypt
+    btn.innerHTML = '\u23f3 encrypting...';
+    showStatus('encrypting message with NIP-04...', 'success');
+
     let fullMsg = content;
     if (senderName) {
       fullMsg = '[from: ' + senderName + ']\n\n' + content;
     }
 
-    // Encrypt via NIP-04
-    const ciphertext = await window.nostr.nip04.encrypt(RECIPIENT_HEX, fullMsg);
+    let ciphertext;
+    try {
+      ciphertext = await window.nostr.nip04.encrypt(RECIPIENT_HEX, fullMsg);
+      console.log('[nostr] encrypted ok, ciphertext length:', ciphertext.length);
+    } catch(e) {
+      showStatus('encryption failed: ' + (e.message || 'extension rejected'), 'error');
+      btn.disabled = false;
+      btn.innerHTML = '\ud83d\udce1 send encrypted DM';
+      return;
+    }
 
-    // Build event per NIP-07: only pass created_at, kind, tags, content
-    // signEvent adds id, pubkey, sig
-    const event = {
-      kind: 4,
-      created_at: Math.floor(Date.now() / 1000),
-      tags: [['p', RECIPIENT_HEX]],
-      content: ciphertext
-    };
+    // Step 2: Sign event (NIP-07 spec: pass kind, created_at, tags, content only)
+    btn.innerHTML = '\u23f3 signing...';
+    showStatus('signing event...', 'success');
 
-    // Sign via extension
-    const signedEvent = await window.nostr.signEvent(event);
-    console.log('[nostr] signed event:', signedEvent);
+    let signedEvent;
+    try {
+      signedEvent = await window.nostr.signEvent({
+        kind: 4,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: [['p', RECIPIENT_HEX]],
+        content: ciphertext
+      });
+      console.log('[nostr] signed event:', JSON.stringify(signedEvent));
+    } catch(e) {
+      showStatus('signing failed: ' + (e.message || 'extension rejected'), 'error');
+      btn.disabled = false;
+      btn.innerHTML = '\ud83d\udce1 send encrypted DM';
+      return;
+    }
 
-    // Publish to relays
-    btn.innerHTML = '📡 publishing...';
+    // Verify signed event has required fields
+    if (!signedEvent || !signedEvent.id || !signedEvent.sig) {
+      showStatus('signed event missing id or sig. check extension.', 'error');
+      console.error('[nostr] bad signed event:', signedEvent);
+      btn.disabled = false;
+      btn.innerHTML = '\ud83d\udce1 send encrypted DM';
+      return;
+    }
+
+    // Step 3: Publish to relays
+    btn.innerHTML = '\ud83d\udce1 publishing...';
+    showStatus('publishing to ' + allRelays.length + ' relays...', 'success');
+
     let published = 0;
     let errors = [];
-    const promises = RELAYS.map(url =>
-      publishToRelay(url, signedEvent)
-        .then(() => { published++; console.log('[nostr] published to:', url); })
-        .catch((e) => { errors.push(url.replace('wss://','')+': '+(e.message||'failed')); })
+
+    const results = await Promise.allSettled(
+      allRelays.map(async (url) => {
+        try {
+          await publishToRelay(url, signedEvent);
+          published++;
+          console.log('[nostr] \u2713 published to:', url);
+        } catch(e) {
+          const reason = e.message || 'failed';
+          errors.push(url.replace('wss://','') + ': ' + reason);
+          console.warn('[nostr] \u2717 failed:', url, reason);
+        }
+      })
     );
-    await Promise.allSettled(promises);
 
     if (published > 0) {
-      showStatus('✓ message sent to ' + published + ' relay' + (published > 1 ? 's' : ''), 'success');
+      showStatus('\u2713 DM sent to ' + published + ' relay' + (published > 1 ? 's' : '') + '!', 'success');
       document.getElementById('msgContent').value = '';
-      document.getElementById('senderName').value = '';
     } else {
-      console.error('[nostr] all relays failed:', errors);
-      showStatus('failed to publish. check console for details. errors: ' + errors.join('; '), 'error');
+      showStatus('all relays failed: ' + errors.join(' | '), 'error');
     }
+
   } catch (e) {
-    showStatus('error: ' + (e.message || 'encryption failed'), 'error');
+    showStatus('unexpected error: ' + (e.message || String(e)), 'error');
+    console.error('[nostr] sendDM error:', e);
   }
 
   btn.disabled = false;
-  btn.innerHTML = '📡 send encrypted DM';
+  btn.innerHTML = '\ud83d\udce1 send encrypted DM';
 }
 
 function publishToRelay(url, event) {
@@ -659,60 +720,44 @@ function publishToRelay(url, event) {
     let ws;
     let settled = false;
 
-    function finish(success, err) {
+    function done(ok, err) {
       if (settled) return;
       settled = true;
-      clearTimeout(timeout);
+      clearTimeout(timer);
       try { ws.close(); } catch(e) {}
-      if (success) resolve();
-      else reject(err || new Error('unknown'));
+      ok ? resolve() : reject(err || new Error('unknown'));
     }
 
-    const timeout = setTimeout(() => {
-      console.warn('[nostr] timeout:', url);
-      finish(false, new Error('timeout'));
-    }, 10000);
+    const timer = setTimeout(() => done(false, new Error('timeout (10s)')), 10000);
 
     try {
       ws = new WebSocket(url);
     } catch(e) {
-      console.error('[nostr] ws create failed:', url, e);
-      finish(false, e);
+      done(false, new Error('ws create failed'));
       return;
     }
 
     ws.onopen = () => {
-      console.log('[nostr] connected:', url);
-      ws.send(JSON.stringify(['EVENT', event]));
+      const msg = JSON.stringify(['EVENT', event]);
+      console.log('[nostr] sending to', url, '(', msg.length, 'bytes)');
+      ws.send(msg);
     };
 
-    ws.onmessage = (msg) => {
-      try {
-        const data = JSON.parse(msg.data);
-        console.log('[nostr] response from', url, ':', data);
+    ws.onmessage = (e) => {
+      let data;
+      try { data = JSON.parse(e.data); } catch(err) { return; }
+      console.log('[nostr]', url, '<-', data);
 
-        if (data[0] === 'OK') {
-          if (data[2] === true) {
-            finish(true);
-          } else {
-            finish(false, new Error(data[3] || 'rejected'));
-          }
-        }
-        // Ignore NOTICE, AUTH, EOSE etc
-      } catch(e) {
-        console.error('[nostr] parse error:', url, e);
+      if (data[0] === 'OK') {
+        data[2] === true
+          ? done(true)
+          : done(false, new Error(data[3] || 'relay rejected'));
       }
+      // AUTH, NOTICE, etc. are ignored
     };
 
-    ws.onerror = (e) => {
-      console.error('[nostr] ws error:', url, e);
-      finish(false, new Error('connection error'));
-    };
-
-    ws.onclose = () => {
-      // If we haven't settled yet, the relay closed without OK
-      finish(false, new Error('connection closed without OK'));
-    };
+    ws.onerror = () => done(false, new Error('ws error'));
+    ws.onclose = () => done(false, new Error('closed before OK'));
   });
 }
 
@@ -720,16 +765,6 @@ function showStatus(msg, type) {
   const el = document.getElementById('msgStatus');
   el.textContent = msg;
   el.className = 'msg-status ' + type;
-}
-
-// Minimal bech32 npub encoding (for display only)
-function hexToNpub(hex) {
-  try {
-    // Simple hex to npub display - in production use a proper bech32 lib
-    return 'npub1' + hex.substring(0, 20) + '...';
-  } catch(e) {
-    return null;
-  }
 }
 </script>
 
