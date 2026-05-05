@@ -614,10 +614,10 @@ async function sendDM() {
     // Encrypt via NIP-04
     const ciphertext = await window.nostr.nip04.encrypt(RECIPIENT_HEX, fullMsg);
 
-    // Build event
+    // Build event per NIP-07: only pass created_at, kind, tags, content
+    // signEvent adds id, pubkey, sig
     const event = {
       kind: 4,
-      pubkey: userPubkey,
       created_at: Math.floor(Date.now() / 1000),
       tags: [['p', RECIPIENT_HEX]],
       content: ciphertext
@@ -657,18 +657,27 @@ async function sendDM() {
 function publishToRelay(url, event) {
   return new Promise((resolve, reject) => {
     let ws;
+    let settled = false;
+
+    function finish(success, err) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      try { ws.close(); } catch(e) {}
+      if (success) resolve();
+      else reject(err || new Error('unknown'));
+    }
+
     const timeout = setTimeout(() => {
       console.warn('[nostr] timeout:', url);
-      try { ws.close(); } catch(e) {}
-      reject(new Error('timeout'));
-    }, 8000);
+      finish(false, new Error('timeout'));
+    }, 10000);
 
     try {
       ws = new WebSocket(url);
     } catch(e) {
-      clearTimeout(timeout);
       console.error('[nostr] ws create failed:', url, e);
-      reject(e);
+      finish(false, e);
       return;
     }
 
@@ -683,12 +692,10 @@ function publishToRelay(url, event) {
         console.log('[nostr] response from', url, ':', data);
 
         if (data[0] === 'OK') {
-          clearTimeout(timeout);
-          ws.close();
           if (data[2] === true) {
-            resolve();
+            finish(true);
           } else {
-            reject(new Error(data[3] || 'rejected'));
+            finish(false, new Error(data[3] || 'rejected'));
           }
         }
         // Ignore NOTICE, AUTH, EOSE etc
@@ -699,12 +706,12 @@ function publishToRelay(url, event) {
 
     ws.onerror = (e) => {
       console.error('[nostr] ws error:', url, e);
-      clearTimeout(timeout);
-      reject(new Error('connection error'));
+      finish(false, new Error('connection error'));
     };
 
     ws.onclose = () => {
-      clearTimeout(timeout);
+      // If we haven't settled yet, the relay closed without OK
+      finish(false, new Error('connection closed without OK'));
     };
   });
 }
