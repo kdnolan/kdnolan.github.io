@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kdnolan.com — encrypted contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --border: #222222;
+    --border-glow: #333333;
+    --text: #e0e0e0;
+    --text-dim: #666666;
+    --text-muted: #444444;
+    --accent: #f7931a;
+    --accent-dim: rgba(247,147,26,0.15);
+    --accent-glow: rgba(247,147,26,0.3);
+    --green: #00d924;
+    --green-dim: rgba(0,217,36,0.15);
+    --green-glow: rgba(0,217,36,0.08);
+    --purple: #8b5cf6;
+    --purple-dim: rgba(139,92,246,0.1);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.15);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  html { font-size: 16px; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    animation: gridShift 20s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes gridShift {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(60px,60px); }
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: var(--accent);
+    top: -150px; right: -100px;
+    animation: orbFloat1 12s ease-in-out infinite;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: var(--purple);
+    bottom: -100px; left: -80px;
+    animation: orbFloat2 15s ease-in-out infinite;
+  }
+  .orb-3 {
+    width: 300px; height: 300px;
+    background: var(--green);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    animation: orbFloat3 18s ease-in-out infinite;
+    opacity: 0.06;
+  }
+
+  @keyframes orbFloat1 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(-40px,60px); }
+  }
+  @keyframes orbFloat2 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(50px,-40px); }
+  }
+  @keyframes orbFloat3 {
+    0%,100% { transform: translate(-50%,-50%) scale(1); }
+    50% { transform: translate(-50%,-50%) scale(1.3); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    padding: 20px;
+    animation: fadeUp 0.8s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px var(--border),
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 80px var(--accent-dim);
+    transition: box-shadow 0.4s ease;
+  }
+  .card:hover {
+    box-shadow:
+      0 0 0 1px var(--border-glow),
+      0 20px 60px rgba(0,0,0,0.6),
+      0 0 120px var(--accent-dim);
+  }
+
+  /* Header */
+  .card-header {
+    padding: 28px 28px 0;
+  }
+
+  .site-id {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .lock-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(247,147,26,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+  h1 span {
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-top: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .subtitle a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .subtitle a:hover { text-decoration: underline; }
+
+  /* NIP-07 sign in */
+  .auth-section {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .auth-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .status-dot.active {
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 4px var(--green-glow); }
+    50% { box-shadow: 0 0 16px rgba(0,217,36,0.25); }
+  }
+
+  .sign-in-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-glow);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+  }
+  .sign-in-btn:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .sign-in-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .signed-in-info {
+    display: none;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--green-dim);
+    border: 1px solid rgba(0,217,36,0.15);
+    border-radius: 8px;
+    font-size: 0.72rem;
+    color: var(--green);
+    word-break: break-all;
+  }
+
+  /* Form */
+  .form-body {
+    padding: 24px 28px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+  }
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  input::placeholder, textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  textarea {
+    min-height: 120px;
+    line-height: 1.5;
+  }
+
+  /* Send button */
+  .send-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent) 0%, #e67e00 100%);
+    color: #000;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .send-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .send-btn:hover::before {
+    transform: translateX(100%);
+  }
+  .send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+  .send-btn:active {
+    transform: translateY(0);
+  }
+  .send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .send-btn:disabled:hover::before {
+    transform: translateX(-100%);
+  }
+
+  /* Status messages */
+  .msg-status {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .msg-status.success {
+    display: block;
+    background: var(--green-dim);
+    border: 1px solid rgba(0,217,36,0.2);
+    color: var(--green);
+  }
+  .msg-status.error {
+    display: block;
+    background: var(--red-dim);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: var(--red);
+  }
+
+  /* Footer */
+  .card-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .protocol-badge {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .protocol-badge .nip {
+    background: var(--purple-dim);
+    color: var(--purple);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .npub-display {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    word-break: break-all;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  /* Scanlines overlay */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+  }
+
+  /* Responsive */
+  @media (max-width: 560px) {
+    .container { padding: 12px; }
+    .card-header, .form-body, .auth-section { padding-left: 20px; padding-right: 20px; }
+    .card-footer { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="scanlines"></div>
+
+<div class="container">
+  <div class="card">
+
+    <div class="card-header">
+      <div class="site-id">kdnolan.com</div>
+      <div class="npub-display">npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q</div>
+      <div class="title-row">
+        <div class="lock-icon">🔐</div>
+        <h1>Encrypted <span>Contact</span></h1>
+      </div>
+      <p class="subtitle">
+        NIP-04 encrypted DM via Nostr. Requires a browser extension
+        (<a href="https://github.com/nicehash/nos2x" target="_blank">nos2x</a>,
+        <a href="https://getalby.com" target="_blank">Alby</a>,
+        <a href="https://nostore.me" target="_blank">Nostore</a>).
+      </p>
+    </div>
+
+    <div class="auth-section">
+      <div class="auth-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="authLabel">checking for extension...</span>
+      </div>
+      <button class="sign-in-btn" id="signInBtn" disabled onclick="signIn()">
+        🔑 sign in with nostr
+      </button>
+      <div class="signed-in-info" id="signedInInfo"></div>
+    </div>
+
+    <div class="form-body">
+      <div class="field">
+        <label>your npub or name <span style="color:var(--text-muted)">(optional)</span></label>
+        <input type="text" id="senderName" placeholder="npub1... or your name">
+      </div>
+      <div class="field">
+        <label>message</label>
+        <textarea id="msgContent" placeholder="your encrypted message..."></textarea>
+      </div>
+      <button class="send-btn" id="sendBtn" disabled onclick="sendDM()">
+        📡 send encrypted DM
+      </button>
+      <div class="msg-status" id="msgStatus"></div>
+    </div>
+
+    <div class="card-footer">
+      <div class="protocol-badge">
+        <span class="nip">NIP-04</span>
+        end-to-end encrypted
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const RECIPIENT_NPUB = 'npub1cyla8qgt9gv8y6ydv8s2prt89h8afc0sr2kaz64ryjmlpdrzxm4qwlh53q';
+const RECIPIENT_HEX = 'c13fd380165430e4d11ac3c2823597963f5398f035573a2d5464b7e16d1836ea';
+
+// Relay list
+const RELAYS = [
+  'wss://relay.damus.io',
+  'wss://relay.nostr.band',
+  'wss://nos.lol',
+  'wss://relay.snort.social',
+  'wss://nostr.wine'
+];
+
+let userPubkey = null;
+
+// Check for NIP-07 extension
+function checkExtension() {
+  const dot = document.getElementById('statusDot');
+  const label = document.getElementById('authLabel');
+  const btn = document.getElementById('signInBtn');
+
+  if (window.nostr) {
+    dot.style.background = 'var(--accent)';
+    dot.style.boxShadow = '0 0 8px var(--accent-dim)';
+    label.textContent = 'extension detected';
+    label.style.color = 'var(--accent)';
+    btn.disabled = false;
+  } else {
+    label.textContent = 'no nostr extension found';
+    label.style.color = 'var(--red)';
+    btn.disabled = true;
+  }
+}
+
+// Retry extension detection (some load slowly)
+let extChecks = 0;
+function tryCheckExtension() {
+  checkExtension();
+  extChecks++;
+  if (!window.nostr && extChecks < 10) {
+    setTimeout(tryCheckExtension, 500);
+  }
+}
+setTimeout(tryCheckExtension, 300);
+
+// Sign in via NIP-07
+async function signIn() {
+  const dot = document.getElementById('statusDot');
+  const label = document.getElementById('authLabel');
+  const info = document.getElementById('signedInInfo');
+  const sendBtn = document.getElementById('sendBtn');
+
+  try {
+    userPubkey = await window.nostr.getPublicKey();
+    dot.classList.add('active');
+    dot.style.background = '';
+    dot.style.boxShadow = '';
+    label.textContent = 'signed in';
+    label.style.color = 'var(--green)';
+    document.getElementById('signInBtn').style.display = 'none';
+
+    // Show truncated npub
+    const npub = hexToNpub(userPubkey) || userPubkey;
+    info.style.display = 'block';
+    info.textContent = '✓ ' + npub.substring(0, 20) + '...' + npub.substring(npub.length - 8);
+
+    sendBtn.disabled = false;
+  } catch (e) {
+    label.textContent = 'sign-in cancelled';
+    label.style.color = 'var(--red)';
+  }
+}
+
+// Send NIP-04 encrypted DM
+async function sendDM() {
+  const btn = document.getElementById('sendBtn');
+  const status = document.getElementById('msgStatus');
+  const content = document.getElementById('msgContent').value.trim();
+  const senderName = document.getElementById('senderName').value.trim();
+
+  if (!content) {
+    showStatus('please enter a message', 'error');
+    return;
+  }
+  if (!userPubkey) {
+    showStatus('please sign in first', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '⏳ encrypting...';
+  status.className = 'msg-status';
+  status.style.display = 'none';
+
+  try {
+    // Build message with optional sender name prefix
+    let fullMsg = content;
+    if (senderName) {
+      fullMsg = '[from: ' + senderName + ']\n\n' + content;
+    }
+
+    // Encrypt via NIP-04
+    const ciphertext = await window.nostr.nip04.encrypt(RECIPIENT_HEX, fullMsg);
+
+    // Build event
+    const event = {
+      kind: 4,
+      pubkey: userPubkey,
+      created_at: Math.floor(Date.now() / 1000),
+      tags: [['p', RECIPIENT_HEX]],
+      content: ciphertext
+    };
+
+    // Sign via extension
+    const signedEvent = await window.nostr.signEvent(event);
+
+    // Publish to relays
+    btn.innerHTML = '📡 publishing...';
+    let published = 0;
+    const promises = RELAYS.map(url => publishToRelay(url, signedEvent).then(() => published++).catch(() => {}));
+    await Promise.allSettled(promises);
+
+    if (published > 0) {
+      showStatus('✓ message sent to ' + published + ' relay' + (published > 1 ? 's' : ''), 'success');
+      document.getElementById('msgContent').value = '';
+      document.getElementById('senderName').value = '';
+    } else {
+      showStatus('failed to publish to any relay. try again.', 'error');
+    }
+  } catch (e) {
+    showStatus('error: ' + (e.message || 'encryption failed'), 'error');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '📡 send encrypted DM';
+}
+
+function publishToRelay(url, event) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(url);
+    const timeout = setTimeout(() => { ws.close(); reject(); }, 5000);
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify(['EVENT', event]));
+    };
+    ws.onmessage = (msg) => {
+      try {
+        const data = JSON.parse(msg.data);
+        if (data[0] === 'OK' && data[2] === true) {
+          clearTimeout(timeout);
+          ws.close();
+          resolve();
+        } else if (data[0] === 'OK') {
+          clearTimeout(timeout);
+          ws.close();
+          reject();
+        }
+      } catch(e) {}
+    };
+    ws.onerror = () => { clearTimeout(timeout); reject(); };
+  });
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('msgStatus');
+  el.textContent = msg;
+  el.className = 'msg-status ' + type;
+}
+
+// Minimal bech32 npub encoding (for display only)
+function hexToNpub(hex) {
+  try {
+    // Simple hex to npub display - in production use a proper bech32 lib
+    return 'npub1' + hex.substring(0, 20) + '...';
+  } catch(e) {
+    return null;
+  }
+}
+</script>
+
+</body>
+</html>
