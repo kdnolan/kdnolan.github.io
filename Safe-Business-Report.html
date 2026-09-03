@@ -178,6 +178,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <li><a href="#malware">Malware</a></li>
       <li><a href="#changes">Changes</a></li>
       <li><a href="#accounts">Accounts</a></li>
+      <li><a href="#network">Network</a></li>
+      <li><a href="#exposure">Exposure</a></li>
       <li><a href="#rules">Rules</a></li>
       <li><a href="#actions">To-do</a></li>
       <li><a href="#glossary">Glossary</a></li>
@@ -252,11 +254,11 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <div class="logo-word">Safe Business<small>Weekly security report</small></div>
       </div>
       <h1>How safe were our computers this week?</h1>
-      <p class="lede">Our monitoring system watched 8 computers around the clock and recorded roughly 7,500 events. Most were harmless housekeeping. A handful matter. This page explains them without the jargon.</p>
+      <p class="lede">Our monitoring system watched 8 computers around the clock and recorded roughly 7,500 events. We also read the office router's own logs and checked how the network looks from the public internet. Most of it is harmless housekeeping. A handful matter. This page explains them without the jargon.</p>
       <div class="meta">
         <span>Period <b>Thu 27 Aug – Thu 3 Sep 2026</b></span>
         <span>Computers watched <b>8</b></span>
-        <span>Source <b>10 monitoring reports</b></span>
+        <span>Source <b>Monitoring reports · router logs · external scan</b></span>
       </div>
     </div>
     <aside class="verdict" aria-label="Overall verdict">
@@ -264,8 +266,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <div class="verdict-badge"><span class="dot"></span>Needs attention</div>
       <p>No sign of an actual break-in. But one computer is running unpatched software with 20 critical holes, and several Windows machines have weak security settings that would make a break-in easier.</p>
       <div class="lights">
-        <div class="light good"><div class="n">1</div><div class="l">area looking fine</div></div>
-        <div class="light watch"><div class="n">2</div><div class="l">areas to watch</div></div>
+        <div class="light good"><div class="n">2</div><div class="l">areas looking fine</div></div>
+        <div class="light watch"><div class="n">3</div><div class="l">areas to watch</div></div>
         <div class="light urgent"><div class="n">2</div><div class="l">need action now</div></div>
       </div>
     </aside>
@@ -425,6 +427,57 @@ footer .brand{font-size:1rem;color:var(--ink2)}
   </div>
 </section>
 
+<section id="network">
+  <div class="wrap">
+    <div class="sec-head"><span class="status watch"><span class="dot"></span>Watch</span><h2>The office router</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>The router is the box that connects the whole office to the internet and runs the Wi-Fi. It is a <strong>GL.iNet MT3000</strong> ("Beryl AX") and had been running for about <strong>13 days</strong> without a restart. Its own logs tell us how the network is set up and who has been connecting.</p>
+        <p><strong>The important things are done well.</strong> The Wi-Fi uses <strong>WPA3</strong> — the newest and strongest Wi-Fi password protection — with a few older devices falling back to WPA2, both with proper AES encryption. There is a <strong>separate Guest Wi-Fi</strong> that is walled off from the main network, so a visitor's phone cannot reach the office computers. The router's internet-facing firewall is set to <strong>refuse all uninvited connections</strong>, and there are no "port forwards" — no deliberate openings that would let someone reach inside the network from outside. Ad and tracker blocking (AdGuard) is switched on for every device.</p>
+        <p><strong>Three things are worth a look.</strong> First, remote login to the router itself (SSH) allows <strong>password sign-in as the top-level "root" account</strong>. That door only opens from inside the office network, not the internet, but it is the kind of default worth tightening. Second, the router's admin page is served over plain <strong>HTTP rather than HTTPS</strong> on the local network. Third, a device called <strong>"jetkvm"</strong> is on the network — that is a gadget that gives someone remote keyboard-and-screen control of a computer. If the team put it there deliberately, fine; if not, it should be identified.</p>
+        <p><strong>One outsider kept knocking.</strong> An unrecognised device tried to join the Wi-Fi several times over a few minutes but was <strong>rejected every time</strong> because it used the wrong security type — it never got on. That is what a neighbour's misconfigured device, or someone guessing, looks like when the Wi-Fi is set up correctly. Everything else in the logs is ordinary: devices getting network addresses, phones and laptops coming and going, and one late-night run of a Windows PC dropping and rejoining the Wi-Fi.</p>
+      </div>
+      <div>
+        <div class="callout good">
+          <h3>Router security at a glance</h3>
+          <div class="bars">
+            <div class="bar good"><span class="k">Wi-Fi encryption</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">WPA3</span></div>
+            <div class="bar good"><span class="k">Guest network</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">Yes</span></div>
+            <div class="bar good"><span class="k">Inbound traffic</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">Blocked</span></div>
+            <div class="bar good"><span class="k">Ad blocking</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">On</span></div>
+            <div class="bar watch"><span class="k">Root SSH login</span><div class="track"><div class="fill" style="width:60%"></div></div><span class="v">On</span></div>
+            <div class="bar watch"><span class="k">Admin over HTTPS</span><div class="track"><div class="fill" style="width:20%"></div></div><span class="v">No</span></div>
+          </div>
+          <p class="small" style="margin-top:12px">Firmware 4.8.1. The router also has the privacy tool "Tor" installed as an optional client — harmless, and only used if someone turns it on.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="exposure">
+  <div class="wrap">
+    <div class="sec-head"><span class="status good"><span class="dot"></span>Fine</span><h2>How we look from the internet</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>Just as important as what is happening inside is what a stranger on the internet can see of us. We checked the office's public internet address (<span class="mono">110.141.235.129</span>, a Telstra connection) from the outside.</p>
+        <p><strong>Nothing is exposed.</strong> Public internet-scanning databases hold <strong>no record of any open doors</strong> on our address — no visible websites, remote-login services, cameras or file shares. That matches what the router's own settings told us: it turns away every uninvited connection. In practice, our network is a closed front door to the outside world, which is exactly what we want.</p>
+        <p><strong>Our address has a clean reputation.</strong> The internet abuse database <span class="mono">AbuseIPDB</span> shows <strong>zero reports</strong> against our address, meaning it has not been seen sending spam, attacks or other bad traffic — nothing on our network appears to be hijacked and misbehaving, and our address is not on a blocklist.</p>
+        <p class="small">A note on how this was checked: a full active scan could not be run from our reporting tool, so this uses reputable passive databases plus the router's own configuration. The two agree. For total assurance, a one-off scan from an outside security service would confirm it directly.</p>
+      </div>
+      <div class="callout good">
+        <h3>External check</h3>
+        <div class="bars">
+          <div class="bar good"><span class="k">Open doors found</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">0</span></div>
+          <div class="bar good"><span class="k">Abuse reports</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">0</span></div>
+          <div class="bar good"><span class="k">On a blocklist?</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">No</span></div>
+        </div>
+        <p class="small" style="margin-top:12px">Provider: Telstra (Australia). The router sits behind Telstra's modem, adding a second layer between the office and the internet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="rules">
   <div class="wrap">
     <div class="sec-head"><span class="status info"><span class="dot"></span>Context</span><h2>What the "compliance" reports mean</h2></div>
@@ -450,6 +503,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <li class="urgent"><div><h3>Confirm what is using port 55555 on the Macs</h3><p>Ask the owners of Mac.lan and kmanmacintosh which apps they run, then check the port. If it is a known app (screen sharing, sync tools and games commonly use high port numbers) mark it as expected so it stops alerting.</p><div class="who">Owner: IT · Effort: 30 minutes</div></div></li>
       <li class="watch"><div><h3>Explain the account changes and agent stops on DAZWIN11 and kmanwin11new</h3><p>Someone should recognise the 4 account changes, the deleted account and the two times the monitoring agent was stopped. If nobody does, treat it as a possible intrusion and investigate.</p><div class="who">Owner: device owners · Effort: a conversation</div></div></li>
       <li class="watch"><div><h3>Reduce monitoring blind spots</h3><p>121 disconnections in a week is high for 8 machines. Check that agents start automatically and are not being closed by users, and consider excluding home laptops from the count if they are expected to be offline.</p><div class="who">Owner: IT · Effort: 1 hour</div></div></li>
+      <li class="watch"><div><h3>Identify the "jetkvm" device on the network</h3><p>This gadget can give remote keyboard-and-screen control of a computer. Confirm the team installed it on purpose and that it has a strong password; if nobody recognises it, unplug it and investigate.</p><div class="who">Owner: IT · Effort: 15 minutes</div></div></li>
+      <li class="watch"><div><h3>Tighten the router's own settings</h3><p>Turn off password login for the router's "root" account (use a key or at least disable it from Wi-Fi), and switch the router admin page to HTTPS. Small changes that harden the box that runs everything.</p><div class="who">Owner: IT · Effort: 20 minutes</div></div></li>
       <li><div><h3>Glance at Defender policy changes on Kman_Win_Old</h3><p>Confirm the 28 antivirus policy changes and the firewall edits line up with Windows Update activity, then move on.</p><div class="who">Owner: IT · Effort: 15 minutes</div></div></li>
     </ol>
   </div>
@@ -466,10 +521,16 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <dl><dt>File integrity monitoring</dt><dd>Watching important files and settings and raising an alert whenever one changes, so tampering can be spotted.</dd></dl>
       <dl><dt>Registry</dt><dd>Windows' internal settings database. Windows edits it constantly, which is why it generates most of our alerts.</dd></dl>
       <dl><dt>Rootkit / hidden port</dt><dd>Software that conceals itself from the computer's own tools. "Hidden port" means a network connection the computer did not admit to.</dd></dl>
+      <dl><dt>WPA3 / WPA2</dt><dd>Wi-Fi password protection standards. WPA3 is the newest and strongest; WPA2 is the older but still-solid version many devices use.</dd></dl>
+      <dl><dt>Guest network</dt><dd>A separate Wi-Fi for visitors that is walled off from the office computers, so a guest device can reach the internet but not your files or machines.</dd></dl>
+      <dl><dt>Firewall / port forward</dt><dd>The firewall blocks uninvited connections from the internet. A "port forward" is a deliberate hole that lets outsiders reach a specific device — we have none.</dd></dl>
+      <dl><dt>SSH</dt><dd>A remote text-based login to a device (here, the router). Handy for admins, but worth locking down so only trusted people and methods can use it.</dd></dl>
+      <dl><dt>Public IP address</dt><dd>Your network's single address on the internet, like a street address. Everything in the office shares it when talking to the outside world.</dd></dl>
+      <dl><dt>KVM (e.g. JetKVM)</dt><dd>A device that lets someone control a computer's keyboard and screen remotely, as if sitting in front of it. Useful, but powerful — so it should be intentional and secured.</dd></dl>
       <dl><dt>MITRE ATT&amp;CK</dt><dd>A catalogue of the tactics attackers use. The monitor tags alerts with the tactic they could be part of, for context.</dd></dl>
     </div>
     <div style="margin-top:28px">
-      <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026.</p></div></details>
+      <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026. Added this week: the office router's own logs (a GL.iNet MT3000) and an external check of the public internet address using passive reputation and exposure databases.</p></div></details>
       <details><summary>How were the traffic lights decided?</summary><div class="prose"><p>"Act now" was given where an attacker could directly exploit the finding today (unpatched critical flaws; missing lock-out and open remote access). "Watch" covers findings that need a human to confirm they are expected. "Fine" means the alerts were routine operating-system behaviour with no security implication. The judgement is ours, based on the counts in the reports, not a score produced by the monitoring tool.</p></div></details>
       <details><summary>What is not in these reports?</summary><div class="prose"><p>Email and phishing, cloud services (Google Workspace, Microsoft 365, website hosting), phones and tablets, and backups are outside what these ten reports cover. A complete picture of the organisation's security would include those.</p></div></details>
     </div>
@@ -479,7 +540,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
 <footer>
   <div class="wrap">
     <a class="brand" href="#top"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sb-logo"/></svg>Safe Business</a>
-    <p style="margin-top:10px">Plain-English security report · Week of 27 August – 3 September 2026 · Compiled from our security monitoring reports. Figures are alert counts as reported; interpretation is advisory.</p>
+    <p style="margin-top:10px">Plain-English security report · Week of 27 August – 3 September 2026 · Compiled from our security monitoring, the office router logs and an external internet check. Figures are alert counts as reported; interpretation is advisory.</p>
   </div>
 </footer>
 </body></html>
