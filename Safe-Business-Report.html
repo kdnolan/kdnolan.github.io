@@ -44,13 +44,16 @@ p{margin:0}
 
 /* nav */
 nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
+nav .wrap{position:relative;display:flex;align-items:center;gap:20px;height:60px}
 .brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
 .brand svg{width:30px;height:30px}
 nav ul{list-style:none;margin:0 0 0 auto;padding:0 4px;display:flex;gap:2px;overflow-x:auto;min-width:0}
 nav li a{display:block;padding:6px 9px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:.9rem;white-space:nowrap}
 nav li a:hover{background:var(--surface2);color:var(--ink)}
-@media (max-width:640px){nav ul{display:none}}
+.nav-toggle{flex:none;display:none;margin-left:auto;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);align-items:center;justify-content:center;cursor:pointer;padding:0}
+.nav-toggle:hover{color:var(--ink);border-color:var(--ink3)}
+.nav-toggle svg{width:22px;height:22px}
+.nav-toggle svg[hidden]{display:none}
 .theme-toggle{flex:none;margin-left:8px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink2);display:inline-grid;place-items:center;cursor:pointer;padding:0}
 .theme-toggle:hover{color:var(--ink);border-color:var(--ink3)}
 .theme-toggle svg{width:20px;height:20px;grid-area:1/1}
@@ -60,7 +63,12 @@ nav li a:hover{background:var(--surface2);color:var(--ink)}
 :root[data-theme="dark"] .theme-toggle .sun{display:block}
 :root[data-theme="light"] .theme-toggle .moon{display:block}
 :root[data-theme="light"] .theme-toggle .sun{display:none}
-@media (max-width:640px){nav ul{display:none} .theme-toggle{margin-left:auto}}
+.nav-toggle{display:inline-flex}
+nav ul{position:absolute;top:100%;right:0;left:auto;width:min(320px,100%);margin:0;padding:8px;flex-direction:column;gap:2px;background:var(--bg);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;box-shadow:var(--shadow);max-height:calc(100vh - 60px);overflow-y:auto;display:none}
+nav ul.open{display:flex}
+nav li a{padding:11px 12px;border-radius:8px;font-size:1rem}
+.theme-toggle{margin-left:0}
+@media (max-width:640px){nav ul{left:0;width:auto;border-radius:0;border-left:0;border-right:0}}
 
 /* hero */
 header.hero{padding:56px 0 40px}
@@ -106,14 +114,22 @@ section{padding:44px 0;border-top:1px solid var(--line)}
 .callout.urgent{border-color:color-mix(in srgb,var(--urgent) 45%,var(--line))}
 .callout.watch{border-color:color-mix(in srgb,var(--watch) 45%,var(--line))}
 
-/* bars */
-.bars{display:grid;gap:10px;margin-top:6px}
-.bar{display:grid;grid-template-columns:minmax(120px,38%) 1fr auto;gap:12px;align-items:center;font-size:.92rem}
-.bar .track{height:12px;background:var(--surface2);border-radius:6px;overflow:hidden}
-.bar .fill{height:100%;border-radius:6px;background:var(--accent)}
+/* numeric bars */
+.bars{display:grid;gap:12px;margin-top:6px}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:6px;align-items:baseline;font-size:.92rem}
+.bar .k{grid-row:1;grid-column:1;color:var(--ink2);min-width:0;line-height:1.3}
+.bar .v{grid-row:1;grid-column:2;font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink);font-weight:500;text-align:right;white-space:nowrap}
+.bar .track{grid-row:2;grid-column:1 / -1;height:10px;background:var(--surface2);border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:var(--accent);min-width:2px}
 .bar.urgent .fill{background:var(--urgent)}.bar.watch .fill{background:var(--watch)}.bar.good .fill{background:var(--good)}
-.bar .v{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink2);min-width:3.5ch;text-align:right}
-.bar .k{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* status list (yes / no / on) */
+.kv{display:grid;gap:2px;margin-top:2px}
+.kv .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.94rem}
+.kv .row:last-child{border-bottom:0}
+.kv .k{color:var(--ink2);min-width:0}
+.kv .tag{flex:none;font-family:var(--display);font-weight:700;font-size:.82rem;padding:3px 11px;border-radius:999px;white-space:nowrap}
+.kv .tag.good{background:var(--good-soft);color:var(--accent-ink)}
+.kv .tag.watch{background:var(--watch-soft);color:var(--ink)}
 .small{font-size:.86rem;color:var(--ink3)}
 
 /* device table */
@@ -170,7 +186,11 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sb-logo"/></svg>
       Safe Business
     </a>
-    <ul>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+      <svg class="open-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <ul id="navMenu">
       <li><a href="#short">Short version</a></li>
       <li><a href="#devices">Devices</a></li>
       <li><a href="#updates">Updates</a></li>
@@ -208,7 +228,20 @@ footer .brand{font-size:1rem;color:var(--ink2)}
     label();
   });
   label();
-})();
+
+  // hamburger menu
+  var nt=document.getElementById('navToggle'), menu=document.getElementById('navMenu');
+  var openI=nt.querySelector('.open-icon'), closeI=nt.querySelector('.close-icon');
+  function setMenu(open){
+    menu.classList.toggle('open',open);
+    nt.setAttribute('aria-expanded',open?'true':'false');
+    openI.toggleAttribute('hidden',open); closeI.toggleAttribute('hidden',!open);
+  }
+  nt.addEventListener('click',function(e){ e.stopPropagation(); setMenu(!menu.classList.contains('open')); });
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) setMenu(false); });
+  document.addEventListener('click',function(e){ if(menu.classList.contains('open') && !menu.contains(e.target) && e.target!==nt) setMenu(false); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+  })();
 </script>
 
 <!-- Logo: a USB stick with a verification tick badge -->
@@ -440,13 +473,13 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <div>
         <div class="callout good">
           <h3>Router security at a glance</h3>
-          <div class="bars">
-            <div class="bar good"><span class="k">Wi-Fi encryption</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">WPA3</span></div>
-            <div class="bar good"><span class="k">Guest network</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">Yes</span></div>
-            <div class="bar good"><span class="k">Inbound traffic</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">Blocked</span></div>
-            <div class="bar good"><span class="k">Ad blocking</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">On</span></div>
-            <div class="bar watch"><span class="k">Root SSH login</span><div class="track"><div class="fill" style="width:60%"></div></div><span class="v">On</span></div>
-            <div class="bar watch"><span class="k">Admin over HTTPS</span><div class="track"><div class="fill" style="width:20%"></div></div><span class="v">No</span></div>
+          <div class="kv">
+            <div class="row"><span class="k">Wi-Fi encryption</span><span class="tag good">WPA3</span></div>
+            <div class="row"><span class="k">Guest network isolated</span><span class="tag good">Yes</span></div>
+            <div class="row"><span class="k">Inbound from internet</span><span class="tag good">Blocked</span></div>
+            <div class="row"><span class="k">Ad / tracker blocking</span><span class="tag good">On</span></div>
+            <div class="row"><span class="k">Root password SSH</span><span class="tag watch">On</span></div>
+            <div class="row"><span class="k">Admin page uses HTTPS</span><span class="tag watch">No</span></div>
           </div>
           <p class="small" style="margin-top:12px">Firmware 4.8.1. The router also has the privacy tool "Tor" installed as an optional client — harmless, and only used if someone turns it on.</p>
         </div>
@@ -467,10 +500,10 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       </div>
       <div class="callout good">
         <h3>External check</h3>
-        <div class="bars">
-          <div class="bar good"><span class="k">Open doors found</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">0</span></div>
-          <div class="bar good"><span class="k">Abuse reports</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">0</span></div>
-          <div class="bar good"><span class="k">On a blocklist?</span><div class="track"><div class="fill good" style="width:100%"></div></div><span class="v">No</span></div>
+        <div class="kv">
+          <div class="row"><span class="k">Open doors found</span><span class="tag good">0</span></div>
+          <div class="row"><span class="k">Abuse reports</span><span class="tag good">0</span></div>
+          <div class="row"><span class="k">On a blocklist?</span><span class="tag good">No</span></div>
         </div>
         <p class="small" style="margin-top:12px">Provider: Telstra (Australia). The router sits behind Telstra's modem, adding a second layer between the office and the internet.</p>
       </div>
