@@ -45,12 +45,22 @@ p{margin:0}
 /* nav */
 nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.brand{display:flex;align-items:center;gap:10px;white-space:nowrap;flex:none;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
 .brand svg{width:30px;height:30px}
-nav ul{list-style:none;margin:0 0 0 auto;padding:0;display:flex;gap:4px;overflow-x:auto}
-nav li a{display:block;padding:6px 10px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:.9rem;white-space:nowrap}
+nav ul{list-style:none;margin:0 0 0 auto;padding:0 4px;display:flex;gap:2px;overflow-x:auto;min-width:0}
+nav li a{display:block;padding:6px 9px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:.9rem;white-space:nowrap}
 nav li a:hover{background:var(--surface2);color:var(--ink)}
 @media (max-width:640px){nav ul{display:none}}
+.theme-toggle{flex:none;margin-left:8px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink2);display:inline-grid;place-items:center;cursor:pointer;padding:0}
+.theme-toggle:hover{color:var(--ink);border-color:var(--ink3)}
+.theme-toggle svg{width:20px;height:20px;grid-area:1/1}
+.theme-toggle .moon{display:block}.theme-toggle .sun{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .theme-toggle .moon{display:none} :root:not([data-theme="light"]) .theme-toggle .sun{display:block}}
+:root[data-theme="dark"] .theme-toggle .moon{display:none}
+:root[data-theme="dark"] .theme-toggle .sun{display:block}
+:root[data-theme="light"] .theme-toggle .moon{display:block}
+:root[data-theme="light"] .theme-toggle .sun{display:none}
+@media (max-width:640px){nav ul{display:none} .theme-toggle{margin-left:auto}}
 
 /* hero */
 header.hero{padding:56px 0 40px}
@@ -113,7 +123,10 @@ section{padding:44px 0;border-top:1px solid var(--line)}
 .devices th{font-family:var(--display);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:var(--surface2)}
 .devices tr:last-child td{border-bottom:0}
 .devices .mono{font-size:.88rem}
-.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.78rem;font-weight:700;font-family:var(--display)}
+.os{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.os svg{width:22px;height:22px;flex:none}
+.os.win svg{color:#2F7FD1}.os.mac svg{color:var(--ink2)}
+.pill{display:inline-block;white-space:nowrap;padding:2px 9px;border-radius:999px;font-size:.78rem;font-weight:700;font-family:var(--display)}
 .pill.good{background:var(--good-soft)}.pill.watch{background:var(--watch-soft)}.pill.urgent{background:var(--urgent-soft)}.pill.info{background:var(--surface2);color:var(--ink2)}
 
 /* actions */
@@ -169,20 +182,64 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <li><a href="#actions">To-do</a></li>
       <li><a href="#glossary">Glossary</a></li>
     </ul>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </button>
   </div>
 </nav>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  var stored=null; try{stored=localStorage.getItem('sb-theme');}catch(e){}
+  if(stored==='dark'||stored==='light'){root.setAttribute('data-theme',stored);}
+  function current(){
+    var t=root.getAttribute('data-theme');
+    if(t) return t;
+    return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  function label(){ btn.setAttribute('aria-label', current()==='dark'?'Switch to light mode':'Switch to dark mode'); }
+  btn.addEventListener('click',function(){
+    var next=current()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('sb-theme',next);}catch(e){}
+    label();
+  });
+  label();
+})();
+</script>
 
-<!-- Logo: a shield whose top edge is a shop awning, with a check mark -->
+<!-- Logo: a USB stick with a verification tick badge -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="sb-g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#3DBB95"/><stop offset="1" stop-color="#0B6B52"/>
     </linearGradient>
+    <linearGradient id="sb-metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E4EBEE"/><stop offset="1" stop-color="#9FAEB5"/>
+    </linearGradient>
     <symbol id="sb-logo" viewBox="0 0 64 64">
-      <path d="M32 4 L58 12 V34 C58 47 47 56 32 62 C17 56 6 47 6 34 V12 Z" fill="url(#sb-g)"/>
-      <path d="M6 12 L58 12 L58 22 L6 22 Z" fill="#FFFFFF" fill-opacity=".18"/>
-      <path d="M6 12 H14 V22 H6 Z M22 12 H30 V22 H22 Z M38 12 H46 V22 H38 Z M54 12 H58 V22 H54 Z" fill="#FFFFFF" fill-opacity=".38"/>
-      <path d="M20 36 L28 44 L45 27" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- USB stick: metal plug on top, body below, verification tick badge -->
+      <rect x="22" y="3" width="20" height="14" rx="2.5" fill="#B9C6CC"/>
+      <rect x="22" y="3" width="20" height="14" rx="2.5" fill="url(#sb-metal)"/>
+      <rect x="26.5" y="7" width="4" height="4" rx="1" fill="#5C6E75"/>
+      <rect x="33.5" y="7" width="4" height="4" rx="1" fill="#5C6E75"/>
+      <rect x="16" y="15" width="32" height="44" rx="7" fill="url(#sb-g)"/>
+      <rect x="20" y="19" width="24" height="10" rx="3" fill="#FFFFFF" fill-opacity=".16"/>
+      <circle cx="46" cy="47" r="13" fill="#FFFFFF"/>
+      <circle cx="46" cy="47" r="10.5" fill="var(--good,#2C9A67)"/>
+      <path d="M40.5 47.5 L44.5 51.5 L52 43.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <!-- generic device icons: desktop tower + monitor for Windows PCs, laptop for Macs -->
+    <symbol id="ic-win" viewBox="0 0 24 24">
+      <rect x="2" y="4" width="20" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M5 8h5M5 11h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+    </symbol>
+    <symbol id="ic-mac" viewBox="0 0 24 24">
+      <rect x="4" y="5" width="16" height="11" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M2 19h20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M10 19h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".55"/>
     </symbol>
   </defs>
 </svg>
@@ -191,7 +248,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
   <div class="wrap hero-grid">
     <div>
       <div class="logo-lockup">
-        <svg viewBox="0 0 64 64" role="img" aria-label="Safe Business logo: a shield with a shop awning and a tick"><use href="#sb-logo"/></svg>
+        <svg viewBox="0 0 64 64" role="img" aria-label="Safe Business logo: a USB stick with a verification tick"><use href="#sb-logo"/></svg>
         <div class="logo-word">Safe Business<small>Weekly security report</small></div>
       </div>
       <h1>How safe were our computers this week?</h1>
@@ -199,7 +256,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <div class="meta">
         <span>Period <b>Thu 27 Aug – Thu 3 Sep 2026</b></span>
         <span>Computers watched <b>8</b></span>
-        <span>Source <b>10 Wazuh module reports</b></span>
+        <span>Source <b>10 monitoring reports</b></span>
       </div>
     </div>
     <aside class="verdict" aria-label="Overall verdict">
@@ -240,14 +297,14 @@ footer .brand{font-size:1rem;color:var(--ink2)}
     <table class="devices">
       <thead><tr><th>Computer</th><th>Type</th><th>Status</th><th>This week</th></tr></thead>
       <tbody>
-        <tr><td class="mono">tigswin10</td><td>Windows 10 Pro</td><td><span class="pill urgent">Act now</span></td><td>32 unpatched security holes (20 critical). Windows 10 is out of support.</td></tr>
-        <tr><td class="mono">kmanwin11new</td><td>Windows 11</td><td><span class="pill urgent">Act now</span></td><td>Scored 25% on the safe-settings checklist. Busiest machine for system changes (all routine). 2 wrong-password login attempts.</td></tr>
-        <tr><td class="mono">DAZWIN11</td><td>Windows 11</td><td><span class="pill watch">Watch</span></td><td>Same weak settings as above. A user account was changed 4 times, and the monitoring agent was stopped twice.</td></tr>
-        <tr><td class="mono">Kman_Win_Old</td><td>Windows 11 Home</td><td><span class="pill watch">Watch</span></td><td>Antivirus (Defender) policy changed 28 times and firewall rules edited. Likely Windows updating itself, but confirm.</td></tr>
-        <tr><td class="mono">kmanmacintosh</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port. Otherwise normal logins and screen locks.</td></tr>
-        <tr><td class="mono">Mac.lan</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port (55555) 15 times. Confirm what is using it.</td></tr>
-        <tr><td class="mono">tigs</td><td>Mac</td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
-        <tr><td class="mono">kman</td><td>Windows</td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
+        <tr><td class="mono">tigswin10</td><td><span class="os win"><svg aria-hidden="true"><use href="#ic-win"/></svg>Windows 10 Pro</span></td><td><span class="pill urgent">Act now</span></td><td>32 unpatched security holes (20 critical). Windows 10 is out of support.</td></tr>
+        <tr><td class="mono">kmanwin11new</td><td><span class="os win"><svg aria-hidden="true"><use href="#ic-win"/></svg>Windows 11</span></td><td><span class="pill urgent">Act now</span></td><td>Scored 25% on the safe-settings checklist. Busiest machine for system changes (all routine). 2 wrong-password login attempts.</td></tr>
+        <tr><td class="mono">DAZWIN11</td><td><span class="os win"><svg aria-hidden="true"><use href="#ic-win"/></svg>Windows 11</span></td><td><span class="pill watch">Watch</span></td><td>Same weak settings as above. A user account was changed 4 times, and the monitoring agent was stopped twice.</td></tr>
+        <tr><td class="mono">Kman_Win_Old</td><td><span class="os win"><svg aria-hidden="true"><use href="#ic-win"/></svg>Windows 11 Home</span></td><td><span class="pill watch">Watch</span></td><td>Antivirus (Defender) policy changed 28 times and firewall rules edited. Likely Windows updating itself, but confirm.</td></tr>
+        <tr><td class="mono">kmanmacintosh</td><td><span class="os mac"><svg aria-hidden="true"><use href="#ic-mac"/></svg>Mac</span></td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port. Otherwise normal logins and screen locks.</td></tr>
+        <tr><td class="mono">Mac.lan</td><td><span class="os mac"><svg aria-hidden="true"><use href="#ic-mac"/></svg>Mac</span></td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port (55555) 15 times. Confirm what is using it.</td></tr>
+        <tr><td class="mono">tigs</td><td><span class="os mac"><svg aria-hidden="true"><use href="#ic-mac"/></svg>Mac</span></td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
+        <tr><td class="mono">kman</td><td><span class="os win"><svg aria-hidden="true"><use href="#ic-win"/></svg>Windows</span></td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
       </tbody>
     </table>
     </div>
@@ -410,7 +467,6 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <dl><dt>Registry</dt><dd>Windows' internal settings database. Windows edits it constantly, which is why it generates most of our alerts.</dd></dl>
       <dl><dt>Rootkit / hidden port</dt><dd>Software that conceals itself from the computer's own tools. "Hidden port" means a network connection the computer did not admit to.</dd></dl>
       <dl><dt>MITRE ATT&amp;CK</dt><dd>A catalogue of the tactics attackers use. The monitor tags alerts with the tactic they could be part of, for context.</dd></dl>
-      <dl><dt>Wazuh</dt><dd>The open-source security monitoring platform that produced the ten source reports behind this page.</dd></dl>
     </div>
     <div style="margin-top:28px">
       <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026.</p></div></details>
@@ -423,7 +479,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
 <footer>
   <div class="wrap">
     <a class="brand" href="#top"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sb-logo"/></svg>Safe Business</a>
-    <p style="margin-top:10px">Plain-English security report · Week of 27 August – 3 September 2026 · Compiled from Wazuh monitoring reports. Figures are alert counts as reported; interpretation is advisory.</p>
+    <p style="margin-top:10px">Plain-English security report · Week of 27 August – 3 September 2026 · Compiled from our security monitoring reports. Figures are alert counts as reported; interpretation is advisory.</p>
   </div>
 </footer>
 </body></html>
