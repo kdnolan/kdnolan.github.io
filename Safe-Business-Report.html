@@ -195,10 +195,10 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <div class="logo-word">Safe Business<small>Weekly security report</small></div>
       </div>
       <h1>How safe were our computers this week?</h1>
-      <p class="lede">Our monitoring system watched 9 computers around the clock and recorded roughly 8,000 events. Most were harmless housekeeping. A handful matter. This page explains them without the jargon.</p>
+      <p class="lede">Our monitoring system watched 8 computers around the clock and recorded roughly 7,500 events. Most were harmless housekeeping. A handful matter. This page explains them without the jargon.</p>
       <div class="meta">
         <span>Period <b>Thu 27 Aug – Thu 3 Sep 2026</b></span>
-        <span>Computers watched <b>9</b></span>
+        <span>Computers watched <b>8</b></span>
         <span>Source <b>10 Wazuh module reports</b></span>
       </div>
     </div>
@@ -207,8 +207,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <div class="verdict-badge"><span class="dot"></span>Needs attention</div>
       <p>No sign of an actual break-in. But one computer is running unpatched software with 20 critical holes, and several Windows machines have weak security settings that would make a break-in easier.</p>
       <div class="lights">
-        <div class="light good"><div class="n">3</div><div class="l">areas looking fine</div></div>
-        <div class="light watch"><div class="n">3</div><div class="l">areas to watch</div></div>
+        <div class="light good"><div class="n">1</div><div class="l">area looking fine</div></div>
+        <div class="light watch"><div class="n">2</div><div class="l">areas to watch</div></div>
         <div class="light urgent"><div class="n">2</div><div class="l">need action now</div></div>
       </div>
     </aside>
@@ -234,8 +234,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
 
 <section id="devices">
   <div class="wrap">
-    <div class="sec-head"><span class="status info"><span class="dot"></span>Inventory</span><h2>The 9 computers we watched</h2></div>
-    <p class="prose" style="margin-bottom:18px;color:var(--ink2)">Five Windows PCs, three Macs and one Linux server (which also runs the monitoring itself). Names are the computers' own network names. The "this week" column is our plain-English read of each machine's alerts.</p>
+    <div class="sec-head"><span class="status info"><span class="dot"></span>Inventory</span><h2>The 8 computers we watched</h2></div>
+    <p class="prose" style="margin-bottom:18px;color:var(--ink2)">Five Windows PCs and three Macs. Names are the computers' own network names. The "this week" column is our plain-English read of each machine's alerts.</p>
     <div class="tablewrap">
     <table class="devices">
       <thead><tr><th>Computer</th><th>Type</th><th>Status</th><th>This week</th></tr></thead>
@@ -244,7 +244,6 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <tr><td class="mono">kmanwin11new</td><td>Windows 11</td><td><span class="pill urgent">Act now</span></td><td>Scored 25% on the safe-settings checklist. Busiest machine for system changes (all routine). 2 wrong-password login attempts.</td></tr>
         <tr><td class="mono">DAZWIN11</td><td>Windows 11</td><td><span class="pill watch">Watch</span></td><td>Same weak settings as above. A user account was changed 4 times, and the monitoring agent was stopped twice.</td></tr>
         <tr><td class="mono">Kman_Win_Old</td><td>Windows 11 Home</td><td><span class="pill watch">Watch</span></td><td>Antivirus (Defender) policy changed 28 times and firewall rules edited. Likely Windows updating itself, but confirm.</td></tr>
-        <tr><td class="mono">dazz-OptiPlex-7050</td><td>Linux server (Ubuntu 24.04)</td><td><span class="pill watch">Watch</span></td><td>Runs the monitoring. 154 half-installed software packages and a 48% safe-settings score. One failed login.</td></tr>
         <tr><td class="mono">kmanmacintosh</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port. Otherwise normal logins and screen locks.</td></tr>
         <tr><td class="mono">Mac.lan</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port (55555) 15 times. Confirm what is using it.</td></tr>
         <tr><td class="mono">tigs</td><td>Mac</td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
@@ -286,7 +285,6 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <p>Independent security experts publish a checklist of recommended settings for each operating system (the "CIS Benchmark"). Our monitoring checks each computer against it and gives a percentage score. Think of it like a car safety inspection: the car may drive fine, but the inspector still wants the seatbelts to work.</p>
         <p><strong>Our Windows 11 machines scored poorly.</strong> <span class="mono">kmanwin11new</span> scored <strong>25%</strong>, and <span class="mono">DAZWIN11</span> fails the same checks. Around 40 individual settings were flagged. In everyday terms, the ones that matter most are:</p>
         <p>• Accounts are <strong>not locked after repeated wrong passwords</strong>, so a password-guessing attack can run all day.<br>• The built-in <strong>Guest account is still enabled</strong> and the Administrator and Guest accounts still have their default names, which makes them easy targets.<br>• <strong>Remote command access</strong> ("Remote Shell") and <strong>basic, unencrypted logins</strong> to Windows management tools are allowed.<br>• Old passwords can be <strong>reused</strong> (no password history), and blank passwords are not restricted to the keyboard in front of the machine.<br>• Windows is allowed to send <strong>unencrypted network traffic</strong> to management services.</p>
-        <p><strong>The Linux server scored 48%.</strong> Better, but still below the halfway mark. One item improved during the week (its application sandboxing moved from failed to passed), which shows these scores respond quickly to fixes.</p>
         <p>None of these settings is difficult or expensive to change. Most take a few minutes each and can be applied to all Windows machines at once.</p>
       </div>
       <div>
@@ -294,10 +292,9 @@ footer .brand{font-size:1rem;color:var(--ink2)}
           <h3>Checklist scores</h3>
           <div class="bars">
             <div class="bar urgent"><span class="k mono">kmanwin11new</span><div class="track"><div class="fill" style="width:25%"></div></div><span class="v">25%</span></div>
-            <div class="bar watch"><span class="k mono">dazz-OptiPlex-7050</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="v">48%</span></div>
             <div class="bar good"><span class="k">Target</span><div class="track"><div class="fill" style="width:80%"></div></div><span class="v">80%+</span></div>
           </div>
-          <p class="small" style="margin-top:12px">Scores come from the CIS Microsoft Windows 11 Enterprise Benchmark v3.0.0 and the CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0.</p>
+          <p class="small" style="margin-top:12px">Scores come from the CIS Microsoft Windows 11 Enterprise Benchmark v3.0.0.</p>
         </div>
       </div>
     </div>
@@ -318,8 +315,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <div class="bars">
           <div class="bar good"><span class="k">Known viruses</span><div class="track"><div class="fill" style="width:0"></div></div><span class="v">0</span></div>
           <div class="bar good"><span class="k">Online-database hits</span><div class="track"><div class="fill" style="width:0"></div></div><span class="v">0</span></div>
-          <div class="bar watch"><span class="k">Computers with hidden ports</span><div class="track"><div class="fill" style="width:22%"></div></div><span class="v">2 of 9</span></div>
-          <div class="bar watch"><span class="k">Computers with hidden processes</span><div class="track"><div class="fill" style="width:11%"></div></div><span class="v">1 of 9</span></div>
+          <div class="bar watch"><span class="k">Computers with hidden ports</span><div class="track"><div class="fill" style="width:25%"></div></div><span class="v">2 of 8</span></div>
+          <div class="bar watch"><span class="k">Computers with hidden processes</span><div class="track"><div class="fill" style="width:12%"></div></div><span class="v">1 of 8</span></div>
         </div>
       </div>
     </div>
@@ -331,8 +328,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
     <div class="sec-head"><span class="status good"><span class="dot"></span>Fine</span><h2>Changes to files and system settings</h2></div>
     <div class="two">
       <div class="prose">
-        <p>This is where most of the week's 8,000 events came from, and almost all of it is noise. The monitor records every change to important files and to the Windows registry (the database where Windows keeps its own settings). Windows changes its own registry constantly: backup snapshots, clock synchronisation, firewall bookkeeping and app usage tracking account for the vast majority of the roughly <strong>5,300 change alerts</strong>.</p>
-        <p><strong>Two things earned a second look.</strong> On <span class="mono">Kman_Win_Old</span>, the Windows Defender antivirus policy area was modified 28 times and firewall rules were edited and deleted. Windows Update does this itself, so it is probably benign, but antivirus and firewall settings are what an attacker changes first, so a quick confirmation is sensible. On the Linux server, 330 file changes were logged alongside 93 new packages installed and 154 packages left "half-configured", which means installations that did not finish cleanly. That is a tidiness problem rather than a security one, but unfinished installs can leave software in an unpredictable state.</p>
+        <p>This is where most of the week's 7,500 events came from, and almost all of it is noise. The monitor records every change to important files and to the Windows registry (the database where Windows keeps its own settings). Windows changes its own registry constantly: backup snapshots, clock synchronisation, firewall bookkeeping and app usage tracking account for the vast majority of the roughly <strong>5,000 change alerts</strong>.</p>
+        <p><strong>One thing earned a second look.</strong> On <span class="mono">Kman_Win_Old</span>, the Windows Defender antivirus policy area was modified 28 times and firewall rules were edited and deleted. Windows Update does this itself, so it is probably benign, but antivirus and firewall settings are what an attacker changes first, so a quick confirmation is sensible.</p>
         <p>Separately, computers opened or closed network ports 262 times and 24 new Windows services were created. Both are normal when software is installed or updated, and the counts are in line with a week that included Windows updates.</p>
       </div>
       <div class="callout">
@@ -341,7 +338,6 @@ footer .brand{font-size:1rem;color:var(--ink2)}
           <div class="bar"><span class="k">Registry value changed</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">2,617</span></div>
           <div class="bar"><span class="k">Registry key changed</span><div class="track"><div class="fill" style="width:49%"></div></div><span class="v">1,292</span></div>
           <div class="bar"><span class="k">Registry entry added</span><div class="track"><div class="fill" style="width:35%"></div></div><span class="v">918</span></div>
-          <div class="bar watch"><span class="k">File changed (Linux server)</span><div class="track"><div class="fill" style="width:13%"></div></div><span class="v">330</span></div>
           <div class="bar"><span class="k">Ports opened / closed</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="v">262</span></div>
         </div>
         <p class="small" style="margin-top:12px">Three Windows PCs (<span class="mono">kmanwin11new</span>, <span class="mono">DAZWIN11</span>, <span class="mono">Kman_Win_Old</span>) produced nearly all registry alerts.</p>
@@ -355,8 +351,8 @@ footer .brand{font-size:1rem;color:var(--ink2)}
     <div class="sec-head"><span class="status watch"><span class="dot"></span>Watch</span><h2>Logins, accounts and monitoring coverage</h2></div>
     <div class="two">
       <div class="prose">
-        <p><strong>Logins look normal.</strong> 16 successful Windows logins, 9 Mac and Linux sessions, and only <strong>2 failed attempts</strong> with a wrong password (on <span class="mono">kmanwin11new</span>) plus one failed authentication on the server. Two failures in a week is what forgetting a password looks like, not an attack.</p>
-        <p><strong>Administrator actions were modest.</strong> Someone used administrator rights ("sudo") on the Linux side 14 times, 9 of them as the top-level root account, and one person did so for the first time this week. On <span class="mono">DAZWIN11</span>, a user account was changed 4 times and, on <span class="mono">kmanwin11new</span>, one account was disabled or deleted and group memberships changed. These are exactly the events a business should be able to explain: if nobody on the team remembers making these changes, that is the moment to dig deeper.</p>
+        <p><strong>Logins look normal.</strong> 16 successful Windows logins, routine Mac screen locks and unlocks, and only <strong>2 failed attempts</strong> with a wrong password (on <span class="mono">kmanwin11new</span>). Two failures in a week is what forgetting a password looks like, not an attack.</p>
+        <p><strong>Account changes were few but should be explainable.</strong> On <span class="mono">DAZWIN11</span>, a user account was changed 4 times and, on <span class="mono">kmanwin11new</span>, one account was disabled or deleted and group memberships changed. These are exactly the events a business should be able to explain: if nobody on the team remembers making these changes, that is the moment to dig deeper.</p>
         <p><strong>The monitor itself went blind at times.</strong> The monitoring agent lost its connection to computers <strong>121 times</strong> and was stopped 5 times (twice on <span class="mono">DAZWIN11</span>). Laptops going to sleep or leaving the office cause most disconnections, but each gap is a period where we could not see what happened. If a machine's agent is being stopped by hand, that should be understood.</p>
       </div>
       <div class="callout watch">
@@ -364,7 +360,6 @@ footer .brand{font-size:1rem;color:var(--ink2)}
         <div class="bars">
           <div class="bar good"><span class="k">Successful logins (Windows)</span><div class="track"><div class="fill" style="width:13%"></div></div><span class="v">16</span></div>
           <div class="bar good"><span class="k">Failed logins</span><div class="track"><div class="fill" style="width:2%"></div></div><span class="v">2</span></div>
-          <div class="bar"><span class="k">Admin (sudo) actions</span><div class="track"><div class="fill" style="width:12%"></div></div><span class="v">14</span></div>
           <div class="bar watch"><span class="k">User accounts changed</span><div class="track"><div class="fill" style="width:4%"></div></div><span class="v">4</span></div>
           <div class="bar watch"><span class="k">Monitor lost contact</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">121</span></div>
         </div>
@@ -377,7 +372,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
   <div class="wrap">
     <div class="sec-head"><span class="status info"><span class="dot"></span>Context</span><h2>What the "compliance" reports mean</h2></div>
     <div class="prose">
-      <p>Four of the ten reports carry the names of formal rulebooks: HIPAA, GDPR, NIST 800-53 and TSC. They do not mean we are being audited, and they do not contain new findings. The monitoring simply tags each alert with the rulebook clauses it relates to, so the same 8,000 events are re-sorted four ways. Nearly every tag points back to the routine registry changes described above. The rulebooks are useful as a shared vocabulary if we ever need to show a partner or funder how we look after data.</p>
+      <p>Four of the ten reports carry the names of formal rulebooks: HIPAA, GDPR, NIST 800-53 and TSC. They do not mean we are being audited, and they do not contain new findings. The monitoring simply tags each alert with the rulebook clauses it relates to, so the same 7,500 events are re-sorted four ways. Nearly every tag points back to the routine registry changes described above. The rulebooks are useful as a shared vocabulary if we ever need to show a partner or funder how we look after data.</p>
     </div>
     <div class="frames">
       <div class="frame"><div class="tag">HIPAA · 164.312</div><h3>US health-data privacy law</h3><p>Our alerts were tagged mostly to its "integrity" and "audit controls" clauses: keep records of changes and be able to tell if data was altered.</p></div>
@@ -397,8 +392,7 @@ footer .brand{font-size:1rem;color:var(--ink2)}
       <li class="urgent"><div><h3>Apply the basic safe settings to all Windows PCs</h3><p>Lock accounts after 5 wrong passwords for 15 minutes, disable the Guest account, rename the Administrator account, turn off Remote Shell and basic authentication, and require 24 unique passwords before reuse. Start with kmanwin11new and DAZWIN11, then re-check the score.</p><div class="who">Owner: IT · Effort: 1–2 hours, repeatable</div></div></li>
       <li class="urgent"><div><h3>Confirm what is using port 55555 on the Macs</h3><p>Ask the owners of Mac.lan and kmanmacintosh which apps they run, then check the port. If it is a known app (screen sharing, sync tools and games commonly use high port numbers) mark it as expected so it stops alerting.</p><div class="who">Owner: IT · Effort: 30 minutes</div></div></li>
       <li class="watch"><div><h3>Explain the account changes and agent stops on DAZWIN11 and kmanwin11new</h3><p>Someone should recognise the 4 account changes, the deleted account and the two times the monitoring agent was stopped. If nobody does, treat it as a possible intrusion and investigate.</p><div class="who">Owner: device owners · Effort: a conversation</div></div></li>
-      <li class="watch"><div><h3>Tidy the Linux server</h3><p>Finish the 154 half-installed packages, then work through the safe-settings checklist to lift the 48% score. Because this server runs the monitoring, its health protects everything else.</p><div class="who">Owner: IT · Effort: a couple of hours</div></div></li>
-      <li class="watch"><div><h3>Reduce monitoring blind spots</h3><p>121 disconnections in a week is high for 9 machines. Check that agents start automatically and are not being closed by users, and consider excluding home laptops from the count if they are expected to be offline.</p><div class="who">Owner: IT · Effort: 1 hour</div></div></li>
+      <li class="watch"><div><h3>Reduce monitoring blind spots</h3><p>121 disconnections in a week is high for 8 machines. Check that agents start automatically and are not being closed by users, and consider excluding home laptops from the count if they are expected to be offline.</p><div class="who">Owner: IT · Effort: 1 hour</div></div></li>
       <li><div><h3>Glance at Defender policy changes on Kman_Win_Old</h3><p>Confirm the 28 antivirus policy changes and the firewall edits line up with Windows Update activity, then move on.</p><div class="who">Owner: IT · Effort: 15 minutes</div></div></li>
     </ol>
   </div>
@@ -408,19 +402,18 @@ footer .brand{font-size:1rem;color:var(--ink2)}
   <div class="wrap">
     <div class="sec-head"><span class="status info"><span class="dot"></span>Reference</span><h2>Jargon, translated</h2></div>
     <div class="gloss">
-      <dl><dt>Agent</dt><dd>A small program installed on each computer that reports back to the monitoring server. When it "disconnects", we lose sight of that computer.</dd></dl>
+      <dl><dt>Agent</dt><dd>A small program installed on each computer that reports back to the monitoring system. When it "disconnects", we lose sight of that computer.</dd></dl>
       <dl><dt>Alert level</dt><dd>A 0–15 severity number. Under 5 is routine, 7 is worth attention, 10+ is serious. Most of our week sat at level 5.</dd></dl>
       <dl><dt>CVE</dt><dd>A public reference number for a known software flaw, like a recall notice for cars. Each comes with a severity rating.</dd></dl>
-      <dl><dt>CIS Benchmark</dt><dd>An independent, widely-used checklist of recommended security settings for Windows, Mac and Linux. Reported as a percentage passed.</dd></dl>
+      <dl><dt>CIS Benchmark</dt><dd>An independent, widely-used checklist of recommended security settings for Windows and Mac. Reported as a percentage passed.</dd></dl>
       <dl><dt>File integrity monitoring</dt><dd>Watching important files and settings and raising an alert whenever one changes, so tampering can be spotted.</dd></dl>
       <dl><dt>Registry</dt><dd>Windows' internal settings database. Windows edits it constantly, which is why it generates most of our alerts.</dd></dl>
       <dl><dt>Rootkit / hidden port</dt><dd>Software that conceals itself from the computer's own tools. "Hidden port" means a network connection the computer did not admit to.</dd></dl>
-      <dl><dt>Sudo / root</dt><dd>Administrator rights on Mac and Linux. "Root" is the all-powerful account; using it should be rare and deliberate.</dd></dl>
       <dl><dt>MITRE ATT&amp;CK</dt><dd>A catalogue of the tactics attackers use. The monitor tags alerts with the tactic they could be part of, for context.</dd></dl>
       <dl><dt>Wazuh</dt><dd>The open-source security monitoring platform that produced the ten source reports behind this page.</dd></dl>
     </div>
     <div style="margin-top:28px">
-      <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026 and were generated by the Wazuh manager <span class="mono">dazz-OptiPlex-7050</span> (Wazuh v4.14.7).</p></div></details>
+      <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026.</p></div></details>
       <details><summary>How were the traffic lights decided?</summary><div class="prose"><p>"Act now" was given where an attacker could directly exploit the finding today (unpatched critical flaws; missing lock-out and open remote access). "Watch" covers findings that need a human to confirm they are expected. "Fine" means the alerts were routine operating-system behaviour with no security implication. The judgement is ours, based on the counts in the reports, not a score produced by the monitoring tool.</p></div></details>
       <details><summary>What is not in these reports?</summary><div class="prose"><p>Email and phishing, cloud services (Google Workspace, Microsoft 365, website hosting), phones and tablets, and backups are outside what these ten reports cover. A complete picture of the organisation's security would include those.</p></div></details>
     </div>
