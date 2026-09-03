@@ -1,0 +1,436 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safe Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F6F4; --surface:#FFFFFF; --surface2:#E7EEEB; --ink:#13262B; --ink2:#4A5F63; --ink3:#7A8F92;
+  --line:#D5DFDC; --accent:#0F8A6A; --accent-ink:#0B6B52; --accent-soft:#D9EFE7;
+  --good:#2C9A67; --good-soft:#DDF2E6; --watch:#D68A00; --watch-soft:#FBEED2; --urgent:#C4432C; --urgent-soft:#FADFD8;
+  --shadow:0 1px 2px rgba(19,38,43,.06),0 8px 24px -12px rgba(19,38,43,.18);
+  --display:"Bricolage Grotesque","Avenir Next",Avenir,"Helvetica Neue",Arial,sans-serif;
+  --body:"Atkinson Hyperlegible",Verdana,"Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E191C; --surface:#172629; --surface2:#1F3135; --ink:#E7EFED; --ink2:#A8BCBE; --ink3:#7C9295;
+    --line:#2A3D41; --accent:#3DBB95; --accent-ink:#6FD5B4; --accent-soft:#163A32;
+    --good:#4CC08A; --good-soft:#153A2A; --watch:#F0A92B; --watch-soft:#3E2E0E; --urgent:#F0785F; --urgent-soft:#44201A;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E191C; --surface:#172629; --surface2:#1F3135; --ink:#E7EFED; --ink2:#A8BCBE; --ink3:#7C9295;
+  --line:#2A3D41; --accent:#3DBB95; --accent-ink:#6FD5B4; --accent-soft:#163A32;
+  --good:#4CC08A; --good-soft:#153A2A; --watch:#F0A92B; --watch-soft:#3E2E0E; --urgent:#F0785F; --urgent-soft:#44201A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1;letter-spacing:-.01em}
+h1{font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:800}
+h2{font-size:clamp(1.6rem,3.2vw,2.1rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.prose{max-width:68ch}
+.mono{font-family:var(--mono);font-size:.92em;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--display);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.brand svg{width:30px;height:30px}
+nav ul{list-style:none;margin:0 0 0 auto;padding:0;display:flex;gap:4px;overflow-x:auto}
+nav li a{display:block;padding:6px 10px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:.9rem;white-space:nowrap}
+nav li a:hover{background:var(--surface2);color:var(--ink)}
+@media (max-width:640px){nav ul{display:none}}
+
+/* hero */
+header.hero{padding:56px 0 40px}
+.hero-grid{display:grid;grid-template-columns:1fr minmax(260px,340px);gap:40px;align-items:start}
+@media (max-width:820px){.hero-grid{grid-template-columns:1fr}}
+.logo-lockup{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+.logo-lockup svg{width:72px;height:72px;flex:none}
+.logo-word{font-family:var(--display);font-weight:800;font-size:2rem;line-height:1;letter-spacing:-.02em}
+.logo-word small{display:block;font-weight:500;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin-top:6px}
+.lede{font-size:1.2rem;color:var(--ink2);margin-top:18px;max-width:58ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:22px;color:var(--ink2);font-size:.95rem}
+.meta b{color:var(--ink);font-weight:700}
+
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.verdict .eyebrow{color:var(--ink3)}
+.verdict-badge{display:inline-flex;align-items:center;gap:10px;margin-top:10px;padding:10px 16px 10px 12px;border-radius:999px;background:var(--watch-soft);color:var(--ink);font-family:var(--display);font-weight:800;font-size:1.35rem}
+.verdict-badge .dot{width:16px;height:16px;border-radius:50%;background:var(--watch);box-shadow:0 0 0 4px color-mix(in srgb,var(--watch) 25%,transparent)}
+.verdict p{margin-top:12px;color:var(--ink2);font-size:.98rem}
+.lights{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.light{text-align:center}
+.light .n{font-family:var(--display);font-weight:800;font-size:1.8rem;line-height:1}
+.light .l{font-size:.78rem;color:var(--ink2);margin-top:4px}
+.light.good .n{color:var(--good)}.light.watch .n{color:var(--watch)}.light.urgent .n{color:var(--urgent)}
+
+/* sections */
+section{padding:44px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.sec-head .status{flex:none;margin-top:6px;display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 9px;border-radius:999px;font-family:var(--display);font-weight:700;font-size:.82rem;letter-spacing:.02em}
+.status .dot{width:10px;height:10px;border-radius:50%}
+.status.good{background:var(--good-soft)}.status.good .dot{background:var(--good)}
+.status.watch{background:var(--watch-soft)}.status.watch .dot{background:var(--watch)}
+.status.urgent{background:var(--urgent-soft)}.status.urgent .dot{background:var(--urgent)}
+.status.info{background:var(--surface2)}.status.info .dot{background:var(--ink3)}
+.sec-head h2{flex:1}
+.two{display:grid;grid-template-columns:minmax(0,68ch) minmax(240px,1fr);gap:36px;align-items:start}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.prose p+p{margin-top:14px}
+.prose strong{font-weight:700}
+
+.callout{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.callout h3{font-size:1rem;margin-bottom:8px}
+.callout.good{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.callout.urgent{border-color:color-mix(in srgb,var(--urgent) 45%,var(--line))}
+.callout.watch{border-color:color-mix(in srgb,var(--watch) 45%,var(--line))}
+
+/* bars */
+.bars{display:grid;gap:10px;margin-top:6px}
+.bar{display:grid;grid-template-columns:minmax(120px,38%) 1fr auto;gap:12px;align-items:center;font-size:.92rem}
+.bar .track{height:12px;background:var(--surface2);border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:var(--accent)}
+.bar.urgent .fill{background:var(--urgent)}.bar.watch .fill{background:var(--watch)}.bar.good .fill{background:var(--good)}
+.bar .v{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink2);min-width:3.5ch;text-align:right}
+.bar .k{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.small{font-size:.86rem;color:var(--ink3)}
+
+/* device table */
+.devices{width:100%;border-collapse:collapse;font-size:.93rem;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tablewrap{overflow-x:auto;border-radius:14px;box-shadow:var(--shadow)}
+.devices th,.devices td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.devices th{font-family:var(--display);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:var(--surface2)}
+.devices tr:last-child td{border-bottom:0}
+.devices .mono{font-size:.88rem}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.78rem;font-weight:700;font-family:var(--display)}
+.pill.good{background:var(--good-soft)}.pill.watch{background:var(--watch-soft)}.pill.urgent{background:var(--urgent-soft)}.pill.info{background:var(--surface2);color:var(--ink2)}
+
+/* actions */
+.actions{list-style:none;padding:0;margin:0;display:grid;gap:12px;counter-reset:act}
+.actions li{display:grid;grid-template-columns:44px 1fr;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.actions li::before{counter-increment:act;content:counter(act);font-family:var(--display);font-weight:800;font-size:1.5rem;line-height:1;color:var(--accent);padding-top:2px}
+.actions h3{font-size:1.05rem}
+.actions p{margin-top:6px;color:var(--ink2);font-size:.96rem}
+.actions .who{margin-top:8px;font-size:.82rem;color:var(--ink3)}
+.actions li.urgent::before{color:var(--urgent)}
+.actions li.watch::before{color:var(--watch)}
+
+/* glossary */
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.gloss dl{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.gloss dt{font-family:var(--display);font-weight:700}
+.gloss dd{margin:4px 0 0;color:var(--ink2);font-size:.94rem}
+
+/* frameworks */
+.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:8px}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.frame .tag{font-family:var(--mono);font-size:.8rem;color:var(--accent-ink)}
+.frame h3{font-size:1rem;margin:6px 0 6px}
+.frame p{font-size:.92rem;color:var(--ink2)}
+
+details{border-top:1px solid var(--line);padding:12px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:700;font-family:var(--display);list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";font-size:1.3rem;color:var(--ink3)}
+details[open] summary::after{content:"–"}
+details .prose{margin-top:10px;color:var(--ink2);font-size:.95rem}
+
+footer{padding:40px 0 60px;color:var(--ink3);font-size:.88rem;border-top:1px solid var(--line)}
+footer .brand{font-size:1rem;color:var(--ink2)}
+</style>
+</head><body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Safe Business home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sb-logo"/></svg>
+      Safe Business
+    </a>
+    <ul>
+      <li><a href="#short">Short version</a></li>
+      <li><a href="#devices">Devices</a></li>
+      <li><a href="#updates">Updates</a></li>
+      <li><a href="#settings">Settings</a></li>
+      <li><a href="#malware">Malware</a></li>
+      <li><a href="#changes">Changes</a></li>
+      <li><a href="#accounts">Accounts</a></li>
+      <li><a href="#rules">Rules</a></li>
+      <li><a href="#actions">To-do</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Logo: a shield whose top edge is a shop awning, with a check mark -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="sb-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3DBB95"/><stop offset="1" stop-color="#0B6B52"/>
+    </linearGradient>
+    <symbol id="sb-logo" viewBox="0 0 64 64">
+      <path d="M32 4 L58 12 V34 C58 47 47 56 32 62 C17 56 6 47 6 34 V12 Z" fill="url(#sb-g)"/>
+      <path d="M6 12 L58 12 L58 22 L6 22 Z" fill="#FFFFFF" fill-opacity=".18"/>
+      <path d="M6 12 H14 V22 H6 Z M22 12 H30 V22 H22 Z M38 12 H46 V22 H38 Z M54 12 H58 V22 H54 Z" fill="#FFFFFF" fill-opacity=".38"/>
+      <path d="M20 36 L28 44 L45 27" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="logo-lockup">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Safe Business logo: a shield with a shop awning and a tick"><use href="#sb-logo"/></svg>
+        <div class="logo-word">Safe Business<small>Weekly security report</small></div>
+      </div>
+      <h1>How safe were our computers this week?</h1>
+      <p class="lede">Our monitoring system watched 9 computers around the clock and recorded roughly 8,000 events. Most were harmless housekeeping. A handful matter. This page explains them without the jargon.</p>
+      <div class="meta">
+        <span>Period <b>Thu 27 Aug – Thu 3 Sep 2026</b></span>
+        <span>Computers watched <b>9</b></span>
+        <span>Source <b>10 Wazuh module reports</b></span>
+      </div>
+    </div>
+    <aside class="verdict" aria-label="Overall verdict">
+      <div class="eyebrow">Overall this week</div>
+      <div class="verdict-badge"><span class="dot"></span>Needs attention</div>
+      <p>No sign of an actual break-in. But one computer is running unpatched software with 20 critical holes, and several Windows machines have weak security settings that would make a break-in easier.</p>
+      <div class="lights">
+        <div class="light good"><div class="n">3</div><div class="l">areas looking fine</div></div>
+        <div class="light watch"><div class="n">3</div><div class="l">areas to watch</div></div>
+        <div class="light urgent"><div class="n">2</div><div class="l">need action now</div></div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<section id="short">
+  <div class="wrap">
+    <div class="sec-head"><span class="status info"><span class="dot"></span>Summary</span><h2>The short version</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p><strong>The good news.</strong> Nothing indicates that anyone got into our systems. No viruses were detected. Twenty known software holes on one Windows 11 machine were closed by updates during the week, which shows updating works when it is allowed to run.</p>
+        <p><strong>The bad news.</strong> The old Windows 10 computer (<span class="mono">tigswin10</span>) has 32 known security holes that have not been fixed, 20 of them rated critical. Windows 10 stopped receiving free security updates in October 2025, so this will only get worse. Two Windows 11 machines scored poorly on a standard checklist of safe settings: no lock-out after repeated wrong passwords, the built-in guest account still enabled, remote command access left on, and so on.</p>
+        <p><strong>Things to check.</strong> Two Macs show "hidden" network ports, which is often a false alarm on Macs but should be confirmed. The monitoring software itself lost contact with computers 121 times, so there were gaps in what we could see. On one older Windows PC, the antivirus policy settings were changed 28 times, which is worth a quick look to confirm it was Windows itself doing it.</p>
+      </div>
+      <div class="callout watch">
+        <h3>Reading the traffic lights</h3>
+        <p class="small" style="color:var(--ink2)"><span class="pill good">Fine</span> Normal activity, nothing to do.<br><br><span class="pill watch">Watch</span> Not dangerous today, but worth a look or a small fix.<br><br><span class="pill urgent">Act now</span> A real weakness an attacker could use. Fix this month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="devices">
+  <div class="wrap">
+    <div class="sec-head"><span class="status info"><span class="dot"></span>Inventory</span><h2>The 9 computers we watched</h2></div>
+    <p class="prose" style="margin-bottom:18px;color:var(--ink2)">Five Windows PCs, three Macs and one Linux server (which also runs the monitoring itself). Names are the computers' own network names. The "this week" column is our plain-English read of each machine's alerts.</p>
+    <div class="tablewrap">
+    <table class="devices">
+      <thead><tr><th>Computer</th><th>Type</th><th>Status</th><th>This week</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">tigswin10</td><td>Windows 10 Pro</td><td><span class="pill urgent">Act now</span></td><td>32 unpatched security holes (20 critical). Windows 10 is out of support.</td></tr>
+        <tr><td class="mono">kmanwin11new</td><td>Windows 11</td><td><span class="pill urgent">Act now</span></td><td>Scored 25% on the safe-settings checklist. Busiest machine for system changes (all routine). 2 wrong-password login attempts.</td></tr>
+        <tr><td class="mono">DAZWIN11</td><td>Windows 11</td><td><span class="pill watch">Watch</span></td><td>Same weak settings as above. A user account was changed 4 times, and the monitoring agent was stopped twice.</td></tr>
+        <tr><td class="mono">Kman_Win_Old</td><td>Windows 11 Home</td><td><span class="pill watch">Watch</span></td><td>Antivirus (Defender) policy changed 28 times and firewall rules edited. Likely Windows updating itself, but confirm.</td></tr>
+        <tr><td class="mono">dazz-OptiPlex-7050</td><td>Linux server (Ubuntu 24.04)</td><td><span class="pill watch">Watch</span></td><td>Runs the monitoring. 154 half-installed software packages and a 48% safe-settings score. One failed login.</td></tr>
+        <tr><td class="mono">kmanmacintosh</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port. Otherwise normal logins and screen locks.</td></tr>
+        <tr><td class="mono">Mac.lan</td><td>Mac</td><td><span class="pill watch">Watch</span></td><td>Reports a hidden network port (55555) 15 times. Confirm what is using it.</td></tr>
+        <tr><td class="mono">tigs</td><td>Mac</td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
+        <tr><td class="mono">kman</td><td>Windows</td><td><span class="pill good">Fine</span></td><td>Only routine login and log activity.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="updates">
+  <div class="wrap">
+    <div class="sec-head"><span class="status urgent"><span class="dot"></span>Act now</span><h2>Software updates and known holes</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>Every piece of software has flaws. When a flaw is discovered it gets a public reference number (a "CVE") and a severity rating, and the maker releases a fix. Our monitoring compares what is installed against that public list.</p>
+        <p><strong>One machine stands out.</strong> <span class="mono">tigswin10</span> runs Windows 10 Pro and has <strong>32 known, unfixed holes</strong>: 20 rated critical (the highest level) and 12 rated high. Because Microsoft ended free Windows 10 support in October 2025, no fixes are coming for this computer unless it is upgraded to Windows 11 or enrolled in paid extended updates. A criminal who gets a foothold on our network would find this the easiest machine to take over.</p>
+        <p><strong>Elsewhere, updates are working.</strong> On a Windows 11 Home machine, 20 previously-reported holes were closed during the week because updates installed. That is exactly what we want to see.</p>
+      </div>
+      <div>
+        <div class="callout urgent">
+          <h3>Unfixed holes on tigswin10</h3>
+          <div class="bars">
+            <div class="bar urgent"><span class="k">Critical (level 10)</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">20</span></div>
+            <div class="bar watch"><span class="k">High (level 7)</span><div class="track"><div class="fill" style="width:60%"></div></div><span class="v">12</span></div>
+          </div>
+          <p class="small" style="margin-top:12px">Compare: 20 holes were <em>fixed</em> this week on another PC just by letting updates run.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="settings">
+  <div class="wrap">
+    <div class="sec-head"><span class="status urgent"><span class="dot"></span>Act now</span><h2>Safe-settings checklist</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>Independent security experts publish a checklist of recommended settings for each operating system (the "CIS Benchmark"). Our monitoring checks each computer against it and gives a percentage score. Think of it like a car safety inspection: the car may drive fine, but the inspector still wants the seatbelts to work.</p>
+        <p><strong>Our Windows 11 machines scored poorly.</strong> <span class="mono">kmanwin11new</span> scored <strong>25%</strong>, and <span class="mono">DAZWIN11</span> fails the same checks. Around 40 individual settings were flagged. In everyday terms, the ones that matter most are:</p>
+        <p>• Accounts are <strong>not locked after repeated wrong passwords</strong>, so a password-guessing attack can run all day.<br>• The built-in <strong>Guest account is still enabled</strong> and the Administrator and Guest accounts still have their default names, which makes them easy targets.<br>• <strong>Remote command access</strong> ("Remote Shell") and <strong>basic, unencrypted logins</strong> to Windows management tools are allowed.<br>• Old passwords can be <strong>reused</strong> (no password history), and blank passwords are not restricted to the keyboard in front of the machine.<br>• Windows is allowed to send <strong>unencrypted network traffic</strong> to management services.</p>
+        <p><strong>The Linux server scored 48%.</strong> Better, but still below the halfway mark. One item improved during the week (its application sandboxing moved from failed to passed), which shows these scores respond quickly to fixes.</p>
+        <p>None of these settings is difficult or expensive to change. Most take a few minutes each and can be applied to all Windows machines at once.</p>
+      </div>
+      <div>
+        <div class="callout urgent">
+          <h3>Checklist scores</h3>
+          <div class="bars">
+            <div class="bar urgent"><span class="k mono">kmanwin11new</span><div class="track"><div class="fill" style="width:25%"></div></div><span class="v">25%</span></div>
+            <div class="bar watch"><span class="k mono">dazz-OptiPlex-7050</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="v">48%</span></div>
+            <div class="bar good"><span class="k">Target</span><div class="track"><div class="fill" style="width:80%"></div></div><span class="v">80%+</span></div>
+          </div>
+          <p class="small" style="margin-top:12px">Scores come from the CIS Microsoft Windows 11 Enterprise Benchmark v3.0.0 and the CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="malware">
+  <div class="wrap">
+    <div class="sec-head"><span class="status watch"><span class="dot"></span>Watch</span><h2>Viruses and hidden activity</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>The monitoring runs three kinds of malware check: scanning files against known virus signatures, checking suspicious files against an online database, and looking for things a computer is trying to hide from its owner (a classic sign of a "rootkit").</p>
+        <p><strong>No viruses were found.</strong> The file and online-database scans produced no hits during the week.</p>
+        <p><strong>Two Macs reported hidden network ports.</strong> A network port is like a numbered door a program listens at. When a program uses a door but that door does not appear in the computer's own list, the monitor calls it "hidden". <span class="mono">Mac.lan</span> reported door <span class="mono">55555</span> hidden 15 times, plus a scatter of others; <span class="mono">kmanmacintosh</span> reported one hidden process. On Macs this is frequently a false alarm caused by how macOS reports network activity, but it is also exactly what real hidden software looks like, so someone should confirm which program is using port 55555.</p>
+      </div>
+      <div class="callout watch">
+        <h3>What the scans found</h3>
+        <div class="bars">
+          <div class="bar good"><span class="k">Known viruses</span><div class="track"><div class="fill" style="width:0"></div></div><span class="v">0</span></div>
+          <div class="bar good"><span class="k">Online-database hits</span><div class="track"><div class="fill" style="width:0"></div></div><span class="v">0</span></div>
+          <div class="bar watch"><span class="k">Computers with hidden ports</span><div class="track"><div class="fill" style="width:22%"></div></div><span class="v">2 of 9</span></div>
+          <div class="bar watch"><span class="k">Computers with hidden processes</span><div class="track"><div class="fill" style="width:11%"></div></div><span class="v">1 of 9</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="changes">
+  <div class="wrap">
+    <div class="sec-head"><span class="status good"><span class="dot"></span>Fine</span><h2>Changes to files and system settings</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p>This is where most of the week's 8,000 events came from, and almost all of it is noise. The monitor records every change to important files and to the Windows registry (the database where Windows keeps its own settings). Windows changes its own registry constantly: backup snapshots, clock synchronisation, firewall bookkeeping and app usage tracking account for the vast majority of the roughly <strong>5,300 change alerts</strong>.</p>
+        <p><strong>Two things earned a second look.</strong> On <span class="mono">Kman_Win_Old</span>, the Windows Defender antivirus policy area was modified 28 times and firewall rules were edited and deleted. Windows Update does this itself, so it is probably benign, but antivirus and firewall settings are what an attacker changes first, so a quick confirmation is sensible. On the Linux server, 330 file changes were logged alongside 93 new packages installed and 154 packages left "half-configured", which means installations that did not finish cleanly. That is a tidiness problem rather than a security one, but unfinished installs can leave software in an unpredictable state.</p>
+        <p>Separately, computers opened or closed network ports 262 times and 24 new Windows services were created. Both are normal when software is installed or updated, and the counts are in line with a week that included Windows updates.</p>
+      </div>
+      <div class="callout">
+        <h3>Where the change alerts came from</h3>
+        <div class="bars">
+          <div class="bar"><span class="k">Registry value changed</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">2,617</span></div>
+          <div class="bar"><span class="k">Registry key changed</span><div class="track"><div class="fill" style="width:49%"></div></div><span class="v">1,292</span></div>
+          <div class="bar"><span class="k">Registry entry added</span><div class="track"><div class="fill" style="width:35%"></div></div><span class="v">918</span></div>
+          <div class="bar watch"><span class="k">File changed (Linux server)</span><div class="track"><div class="fill" style="width:13%"></div></div><span class="v">330</span></div>
+          <div class="bar"><span class="k">Ports opened / closed</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="v">262</span></div>
+        </div>
+        <p class="small" style="margin-top:12px">Three Windows PCs (<span class="mono">kmanwin11new</span>, <span class="mono">DAZWIN11</span>, <span class="mono">Kman_Win_Old</span>) produced nearly all registry alerts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="accounts">
+  <div class="wrap">
+    <div class="sec-head"><span class="status watch"><span class="dot"></span>Watch</span><h2>Logins, accounts and monitoring coverage</h2></div>
+    <div class="two">
+      <div class="prose">
+        <p><strong>Logins look normal.</strong> 16 successful Windows logins, 9 Mac and Linux sessions, and only <strong>2 failed attempts</strong> with a wrong password (on <span class="mono">kmanwin11new</span>) plus one failed authentication on the server. Two failures in a week is what forgetting a password looks like, not an attack.</p>
+        <p><strong>Administrator actions were modest.</strong> Someone used administrator rights ("sudo") on the Linux side 14 times, 9 of them as the top-level root account, and one person did so for the first time this week. On <span class="mono">DAZWIN11</span>, a user account was changed 4 times and, on <span class="mono">kmanwin11new</span>, one account was disabled or deleted and group memberships changed. These are exactly the events a business should be able to explain: if nobody on the team remembers making these changes, that is the moment to dig deeper.</p>
+        <p><strong>The monitor itself went blind at times.</strong> The monitoring agent lost its connection to computers <strong>121 times</strong> and was stopped 5 times (twice on <span class="mono">DAZWIN11</span>). Laptops going to sleep or leaving the office cause most disconnections, but each gap is a period where we could not see what happened. If a machine's agent is being stopped by hand, that should be understood.</p>
+      </div>
+      <div class="callout watch">
+        <h3>Account and access events</h3>
+        <div class="bars">
+          <div class="bar good"><span class="k">Successful logins (Windows)</span><div class="track"><div class="fill" style="width:13%"></div></div><span class="v">16</span></div>
+          <div class="bar good"><span class="k">Failed logins</span><div class="track"><div class="fill" style="width:2%"></div></div><span class="v">2</span></div>
+          <div class="bar"><span class="k">Admin (sudo) actions</span><div class="track"><div class="fill" style="width:12%"></div></div><span class="v">14</span></div>
+          <div class="bar watch"><span class="k">User accounts changed</span><div class="track"><div class="fill" style="width:4%"></div></div><span class="v">4</span></div>
+          <div class="bar watch"><span class="k">Monitor lost contact</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">121</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <div class="wrap">
+    <div class="sec-head"><span class="status info"><span class="dot"></span>Context</span><h2>What the "compliance" reports mean</h2></div>
+    <div class="prose">
+      <p>Four of the ten reports carry the names of formal rulebooks: HIPAA, GDPR, NIST 800-53 and TSC. They do not mean we are being audited, and they do not contain new findings. The monitoring simply tags each alert with the rulebook clauses it relates to, so the same 8,000 events are re-sorted four ways. Nearly every tag points back to the routine registry changes described above. The rulebooks are useful as a shared vocabulary if we ever need to show a partner or funder how we look after data.</p>
+    </div>
+    <div class="frames">
+      <div class="frame"><div class="tag">HIPAA · 164.312</div><h3>US health-data privacy law</h3><p>Our alerts were tagged mostly to its "integrity" and "audit controls" clauses: keep records of changes and be able to tell if data was altered.</p></div>
+      <div class="frame"><div class="tag">GDPR · Art. 5, 32, 35</div><h3>EU personal-data regulation</h3><p>Tags related to keeping systems reliable, detecting break-ins, and tracking who has admin access. The Australian equivalent is the Privacy Act.</p></div>
+      <div class="frame"><div class="tag">NIST 800-53 · SI-7, CM-1, AU-6</div><h3>US government security controls</h3><p>Clauses about checking software has not been tampered with, managing configuration, and reviewing logs.</p></div>
+      <div class="frame"><div class="tag">TSC · CC6, CC7</div><h3>Trust criteria behind SOC 2 audits</h3><p>Controls for restricting access, detecting anomalies and responding to incidents. Often asked about by larger partners.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="actions">
+  <div class="wrap">
+    <div class="sec-head"><span class="status urgent"><span class="dot"></span>Priorities</span><h2>What to do next</h2></div>
+    <p class="prose" style="margin-bottom:20px;color:var(--ink2)">In order of importance. The first three would move this week's verdict from amber to green.</p>
+    <ol class="actions">
+      <li class="urgent"><div><h3>Upgrade or retire the Windows 10 computer (tigswin10)</h3><p>It has 32 unpatched holes and no more free fixes are coming. Upgrade it to Windows 11 if the hardware allows, replace it, or keep it off the network until then.</p><div class="who">Owner: IT · Effort: an afternoon, or a new PC</div></div></li>
+      <li class="urgent"><div><h3>Apply the basic safe settings to all Windows PCs</h3><p>Lock accounts after 5 wrong passwords for 15 minutes, disable the Guest account, rename the Administrator account, turn off Remote Shell and basic authentication, and require 24 unique passwords before reuse. Start with kmanwin11new and DAZWIN11, then re-check the score.</p><div class="who">Owner: IT · Effort: 1–2 hours, repeatable</div></div></li>
+      <li class="urgent"><div><h3>Confirm what is using port 55555 on the Macs</h3><p>Ask the owners of Mac.lan and kmanmacintosh which apps they run, then check the port. If it is a known app (screen sharing, sync tools and games commonly use high port numbers) mark it as expected so it stops alerting.</p><div class="who">Owner: IT · Effort: 30 minutes</div></div></li>
+      <li class="watch"><div><h3>Explain the account changes and agent stops on DAZWIN11 and kmanwin11new</h3><p>Someone should recognise the 4 account changes, the deleted account and the two times the monitoring agent was stopped. If nobody does, treat it as a possible intrusion and investigate.</p><div class="who">Owner: device owners · Effort: a conversation</div></div></li>
+      <li class="watch"><div><h3>Tidy the Linux server</h3><p>Finish the 154 half-installed packages, then work through the safe-settings checklist to lift the 48% score. Because this server runs the monitoring, its health protects everything else.</p><div class="who">Owner: IT · Effort: a couple of hours</div></div></li>
+      <li class="watch"><div><h3>Reduce monitoring blind spots</h3><p>121 disconnections in a week is high for 9 machines. Check that agents start automatically and are not being closed by users, and consider excluding home laptops from the count if they are expected to be offline.</p><div class="who">Owner: IT · Effort: 1 hour</div></div></li>
+      <li><div><h3>Glance at Defender policy changes on Kman_Win_Old</h3><p>Confirm the 28 antivirus policy changes and the firewall edits line up with Windows Update activity, then move on.</p><div class="who">Owner: IT · Effort: 15 minutes</div></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="wrap">
+    <div class="sec-head"><span class="status info"><span class="dot"></span>Reference</span><h2>Jargon, translated</h2></div>
+    <div class="gloss">
+      <dl><dt>Agent</dt><dd>A small program installed on each computer that reports back to the monitoring server. When it "disconnects", we lose sight of that computer.</dd></dl>
+      <dl><dt>Alert level</dt><dd>A 0–15 severity number. Under 5 is routine, 7 is worth attention, 10+ is serious. Most of our week sat at level 5.</dd></dl>
+      <dl><dt>CVE</dt><dd>A public reference number for a known software flaw, like a recall notice for cars. Each comes with a severity rating.</dd></dl>
+      <dl><dt>CIS Benchmark</dt><dd>An independent, widely-used checklist of recommended security settings for Windows, Mac and Linux. Reported as a percentage passed.</dd></dl>
+      <dl><dt>File integrity monitoring</dt><dd>Watching important files and settings and raising an alert whenever one changes, so tampering can be spotted.</dd></dl>
+      <dl><dt>Registry</dt><dd>Windows' internal settings database. Windows edits it constantly, which is why it generates most of our alerts.</dd></dl>
+      <dl><dt>Rootkit / hidden port</dt><dd>Software that conceals itself from the computer's own tools. "Hidden port" means a network connection the computer did not admit to.</dd></dl>
+      <dl><dt>Sudo / root</dt><dd>Administrator rights on Mac and Linux. "Root" is the all-powerful account; using it should be rare and deliberate.</dd></dl>
+      <dl><dt>MITRE ATT&amp;CK</dt><dd>A catalogue of the tactics attackers use. The monitor tags alerts with the tactic they could be part of, for context.</dd></dl>
+      <dl><dt>Wazuh</dt><dd>The open-source security monitoring platform that produced the ten source reports behind this page.</dd></dl>
+    </div>
+    <div style="margin-top:28px">
+      <details><summary>Which source reports were used?</summary><div class="prose"><p>Threat hunting (two copies), Malware detection, File integrity monitoring, MITRE ATT&amp;CK, IT hygiene, NIST 800-53, HIPAA, GDPR and TSC. All covered 27 Aug – 3 Sep 2026 and were generated by the Wazuh manager <span class="mono">dazz-OptiPlex-7050</span> (Wazuh v4.14.7).</p></div></details>
+      <details><summary>How were the traffic lights decided?</summary><div class="prose"><p>"Act now" was given where an attacker could directly exploit the finding today (unpatched critical flaws; missing lock-out and open remote access). "Watch" covers findings that need a human to confirm they are expected. "Fine" means the alerts were routine operating-system behaviour with no security implication. The judgement is ours, based on the counts in the reports, not a score produced by the monitoring tool.</p></div></details>
+      <details><summary>What is not in these reports?</summary><div class="prose"><p>Email and phishing, cloud services (Google Workspace, Microsoft 365, website hosting), phones and tablets, and backups are outside what these ten reports cover. A complete picture of the organisation's security would include those.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sb-logo"/></svg>Safe Business</a>
+    <p style="margin-top:10px">Plain-English security report · Week of 27 August – 3 September 2026 · Compiled from Wazuh monitoring reports. Figures are alert counts as reported; interpretation is advisory.</p>
+  </div>
+</footer>
+</body></html>
