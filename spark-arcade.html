@@ -94,7 +94,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
   }
   .brand {
     display: flex;
@@ -127,6 +128,8 @@
     line-height: 1.5;
     letter-spacing: 0.04em;
     white-space: nowrap;
+    /* reserve room for the longest role so the nav never shifts while typing */
+    width: 27ch;
   }
   .type-cursor {
     display: inline-block;
@@ -138,7 +141,7 @@
     animation: cblink 1s steps(1) infinite;
   }
   @keyframes cblink { 50% { opacity: 0; } }
-  nav.site-nav { display: flex; gap: 18px; align-items: center; }
+  nav.site-nav { display: flex; gap: 18px; align-items: center; flex-shrink: 0; }
   nav.site-nav a {
     color: var(--text-dim);
     text-decoration: none;
@@ -917,6 +920,12 @@
   }
   @media (max-width: 640px) { .live-embed { height: 320px; } }
 
+  .photo-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 16px 0 8px; max-width: 66ch; }
+  .photo-strip figure { margin: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+  .photo-strip a { display: block; }
+  .photo-strip img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; transition: transform 0.3s; }
+  .photo-strip a:hover img { transform: scale(1.03); }
+  .photo-strip figcaption { font-size: 0.62rem; color: var(--text-dim); padding: 7px 10px; line-height: 1.4; }
   .photo-hero { background-size: cover !important; background-position: center; }
   .photo-credit {
     position: absolute;
@@ -998,11 +1007,10 @@
 </header>
 
 <section class="hero" id="top">
-  <div class="art-hero arcade photo-hero" style="background-image: linear-gradient(rgba(8,8,8,0.72), rgba(8,8,8,0.8)), url('https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=1600&q=70');">
+  <div class="art-hero arcade photo-hero" style="background-image: linear-gradient(rgba(8,8,8,0.72), rgba(8,8,8,0.8)), url('img/arcade-cabinet.jpg');">
     <div class="arcade-title">SPARK ARCADE</div>
     <div class="press-start">▶ PRESS START</div>
     <div class="coin-row">STUDENT-MADE GAMES · INSERT CURIOSITY</div>
-  <a class="photo-credit" href="https://unsplash.com/photos/8Gdayy2Lhi0" target="_blank" rel="noopener">photo: Carl Raw / Unsplash</a>
   </div>
   <div class="hero-caption">
     <div class="article-kicker">
@@ -1055,6 +1063,11 @@
     <p>Select a cartridge and the game opens in a fullscreen player overlay, no browser chrome, just the game. The wall has full gamepad support, so an 8BitDo or Xbox controller works the moment it's plugged in. On the classroom's big screen it feels like a real arcade machine, which is exactly the reaction you want from a nine-year-old seeing their own game up there.</p>
     <div class="callout">
       The first version of this was a little localStorage-based launcher that only worked on one machine. It grew into the live sheet-fed wall one iteration at a time, which is its own lesson: ship the small ugly version first, then version it up. The castles in Red vs Blue are versioned for the same reason.
+    </div>
+    <div class="photo-strip">
+      <figure><a href="img/arcade-space-recoil.jpg" target="_blank" rel="noopener"><img src="img/arcade-space-recoil-640.jpg" alt="The arcade cabinet running Space Recoil" loading="lazy"></a><figcaption>The arcade cabinet running Space Recoil</figcaption></figure>
+      <figure><a href="img/space-recoil-crt.jpg" target="_blank" rel="noopener"><img src="img/space-recoil-crt-640.jpg" alt="Space Recoil on a CRT with two controllers" loading="lazy"></a><figcaption>Space Recoil on a CRT with two controllers</figcaption></figure>
+      <figure><a href="img/arcade-now-showing.jpg" target="_blank" rel="noopener"><img src="img/arcade-now-showing-640.jpg" alt="The “now showing” game wall and arcade stick" loading="lazy"></a><figcaption>The “now showing” game wall and arcade stick</figcaption></figure>
     </div>
   </div>
 

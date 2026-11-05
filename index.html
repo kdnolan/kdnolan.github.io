@@ -94,7 +94,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
   }
   .brand {
     display: flex;
@@ -127,6 +128,8 @@
     line-height: 1.5;
     letter-spacing: 0.04em;
     white-space: nowrap;
+    /* reserve room for the longest role so the nav never shifts while typing */
+    width: 27ch;
   }
   .type-cursor {
     display: inline-block;
@@ -138,7 +141,7 @@
     animation: cblink 1s steps(1) infinite;
   }
   @keyframes cblink { 50% { opacity: 0; } }
-  nav.site-nav { display: flex; gap: 18px; align-items: center; }
+  nav.site-nav { display: flex; gap: 18px; align-items: center; flex-shrink: 0; }
   nav.site-nav a {
     color: var(--text-dim);
     text-decoration: none;
@@ -870,6 +873,13 @@
   .post-thumb.vr-t .mf.b { background: linear-gradient(135deg, var(--green), var(--blue)); width: 32px; height: 24px; }
   .post-thumb.vr-t .mf.c { background: linear-gradient(135deg, var(--purple), var(--red)); transform: rotate(7deg); }
   .post-thumb.vr-t .t2 { font-size: 0.56rem; color: #cfd6ff; letter-spacing: 0.2em; }
+  .post-thumb.city-t { background: radial-gradient(ellipse at 50% 10%, rgba(247,147,26,0.16), rgba(247,147,26,0.02)); }
+  .post-thumb.city-t .mini-plots { display: grid; grid-template-columns: repeat(3, 18px); gap: 3px; transform: perspective(200px) rotateX(35deg); }
+  .post-thumb.city-t .mini-plots i { height: 18px; border-radius: 2px; background: #6d6f78; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25); }
+  .post-thumb.city-t .mini-plots i:nth-child(odd) { background: #8a7a5c; }
+  .post-thumb.city-t .mini-plots i:nth-child(3n) { background: #5b7f3a; }
+  .post-thumb.city-t .mini-plots i.me { background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+  .post-thumb.city-t .t2 { font-size: 0.54rem; color: var(--text-dim); letter-spacing: 0.18em; }
   .post-thumb.sl-t { background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.18), rgba(59,130,246,0.03)); }
   .post-thumb.sl-t .sat { font-size: 1.3rem; }
   .post-thumb.sl-t .mini-beam { width: 2px; height: 26px; background: repeating-linear-gradient(180deg, var(--accent) 0 5px, transparent 5px 10px); animation: beamflow 1s linear infinite; }
@@ -1252,7 +1262,7 @@
   </div>
 
   <a class="post-card" href="red-vs-blue.html">
-    <div class="post-thumb photo" style="background-image: linear-gradient(rgba(8,8,8,0.35), rgba(8,8,8,0.44999999999999996)), url('https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=640&q=65');">
+    <div class="post-thumb photo" style="background-image: linear-gradient(rgba(8,8,8,0.35), rgba(8,8,8,0.44999999999999996)), url('img/minecraft-laptops-640.jpg');">
       <div class="half r"><svg class="picto castle" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="M12 54V24h5v-6h6v6h6v-6h6v6h6v-6h6v6h5v30"/>
   <path d="M26 54v-9a6 6 0 0 1 12 0v9"/>
@@ -1282,7 +1292,7 @@
   </a>
 
   <a class="post-card" href="vr-gallery.html">
-    <div class="post-thumb solid vr-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('https://images.unsplash.com/photo-1576633587382-13ddf37b1fc1?auto=format&fit=crop&w=640&q=65');">
+    <div class="post-thumb solid vr-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('img/creeper-drawing-640.jpg');">
       <svg class="picto" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <rect x="8" y="24" width="48" height="22" rx="9"/>
   <path d="M25 46a7 7 0 0 1 14 0"/>
@@ -1309,7 +1319,7 @@
   </a>
 
   <a class="post-card" href="spark-arcade.html">
-    <div class="post-thumb solid arcade-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=640&q=65');">
+    <div class="post-thumb solid arcade-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('img/arcade-cabinet-640.jpg');">
       <svg class="picto" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="M16 56V20l6-11h20l6 11v36z"/>
   <rect x="23" y="18" width="18" height="13" rx="2"/>
@@ -1336,7 +1346,7 @@
   </a>
 
   <a class="post-card" href="starlink.html">
-    <div class="post-thumb solid sl-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.5), rgba(8,8,8,0.6)), url('https://images.unsplash.com/photo-1587465665311-cff60ece0291?auto=format&fit=crop&w=640&q=65');">
+    <div class="post-thumb solid sl-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.5), rgba(8,8,8,0.6)), url('img/server-rack-2-640.jpg');">
       <svg class="picto" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <rect x="26" y="14" width="12" height="15" rx="2"/>
   <rect x="5" y="17" width="16" height="8" rx="1.5"/>
@@ -1363,7 +1373,7 @@
   </a>
 
   <a class="post-card" href="ctf.html">
-    <div class="post-thumb solid ctf-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('https://images.unsplash.com/photo-1637001956354-4d96d14bc585?auto=format&fit=crop&w=640&q=65');">
+    <div class="post-thumb solid ctf-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('img/ctf-slide-640.jpg');">
       <svg class="picto" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="M22 56V8"/>
   <path d="M22 11c8-4.5 14 4.5 22 0v16c-8 4.5-14-4.5-22 0z"/>
@@ -1383,6 +1393,25 @@
       </div>
       <h3>Five flags: running a whole-school capture the flag competition</h3>
       <p>Five rounds of real security challenges, Google Forms as the submission system, a live leaderboard with nearly 200 students on it, and one round built around counting the sats in a real Bitcoin wallet.</p>
+      <span class="read">Read the article</span>
+    </div>
+  </a>
+
+  <a class="post-card" href="ancient-city.html">
+    <div class="post-thumb solid city-t photo" style="background-image: linear-gradient(rgba(8,8,8,0.45), rgba(8,8,8,0.55)), url('img/ancient-city-1-640.jpg');">
+      <div class="mini-plots" aria-hidden="true"><i></i><i></i><i></i><i class="me"></i><i></i><i></i><i></i><i></i><i></i></div>
+      <span class="t2">ONE PLOT EACH</span>
+    </div>
+    <div class="post-body">
+      <div class="post-meta">
+        <time datetime="2026-04-02">2 Apr 2026</time>
+        <span class="pill">minecraft</span>
+        <span class="pill">3d printing</span>
+        <span class="pill">history</span>
+        <span>~5 min read</span>
+      </div>
+      <h3>The Ancient City: a whole school builds in Minecraft, then prints it in 3D</h3>
+      <p>Term 1 in the SPARK Centre: every student built one plot of an ancient city in Minecraft, exported it as a .mcstructure, converted it to STL and 3D printed it, then the prints came together as one city.</p>
       <span class="read">Read the article</span>
     </div>
   </a>
