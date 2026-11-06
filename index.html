@@ -998,6 +998,60 @@
     text-overflow: ellipsis;
   }
 
+  /* Press lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(4px);
+    display: none;
+    flex-direction: column;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #222;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: #e0e0e0;
+  }
+  .lightbox-title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lightbox-bar button {
+    background: #111;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    border-radius: 6px;
+    font: inherit;
+    padding: 6px 11px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lightbox-bar button:hover { border-color: var(--accent); color: var(--accent); }
+  .lightbox-scroll {
+    flex: 1;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 20px 16px 40px;
+    cursor: zoom-out;
+  }
+  .lightbox-scroll img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    cursor: default;
+  }
+  .lightbox-status { text-align: center; color: #8a8a8a; font-family: var(--mono); font-size: 0.72rem; padding: 40px 0; }
+  body.lightbox-lock { overflow: hidden; }
+
   /* Card pictograms */
   .picto { width: 56px; height: 56px; display: block; }
   .post-thumb .half .picto { width: 46px; height: 46px; }
@@ -1585,6 +1639,19 @@
   </div>
 </section>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle" hidden>
+  <div class="lightbox-bar">
+    <span class="lightbox-title" id="lightboxTitle"></span>
+    <button type="button" data-lb="prev" aria-label="Previous article">&larr;</button>
+    <button type="button" data-lb="next" aria-label="Next article">&rarr;</button>
+    <button type="button" data-lb="close" aria-label="Close">&times;</button>
+  </div>
+  <div class="lightbox-scroll" id="lightboxScroll">
+    <div class="lightbox-status" id="lightboxStatus">Loading…</div>
+    <img id="lightboxImg" alt="">
+  </div>
+</div>
+
 <div class="contact-wrap" id="contact">
   <div class="contact-lead">
     <h2>Get in touch</h2>
@@ -1912,6 +1979,79 @@ applyThemeIcon();
 if (window.matchMedia) {
   try { window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', applyThemeIcon); } catch(e) {}
 }
+</script>
+
+<script>
+(function(){
+  var box = document.getElementById('lightbox');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.press-card'));
+  if (!box || !cards.length) return;
+  var img = document.getElementById('lightboxImg');
+  var title = document.getElementById('lightboxTitle');
+  var status = document.getElementById('lightboxStatus');
+  var scroller = document.getElementById('lightboxScroll');
+  var current = -1, opener = null;
+
+  function caption(card) {
+    var cap = card.querySelector('.press-caption');
+    var b = cap.querySelector('b'), s = cap.querySelector('span');
+    return b.textContent + (s ? ' · ' + s.textContent : '');
+  }
+  function show(i) {
+    current = (i + cards.length) % cards.length;
+    var card = cards[current];
+    // Same-origin path so it also works on a local preview
+    var src = new URL(card.href).pathname;
+    title.textContent = caption(card);
+    img.alt = card.querySelector('img').alt;
+    img.style.display = 'none';
+    status.textContent = 'Loading…';
+    status.style.display = '';
+    scroller.scrollTop = 0;
+    img.onload = function() { status.style.display = 'none'; img.style.display = ''; };
+    img.onerror = function() { status.textContent = 'Could not load this article.'; };
+    img.src = src;
+  }
+  function open(i) {
+    opener = document.activeElement;
+    box.hidden = false;
+    box.classList.add('open');
+    document.body.classList.add('lightbox-lock');
+    show(i);
+    box.querySelector('[data-lb="close"]').focus();
+  }
+  function close() {
+    box.classList.remove('open');
+    box.hidden = true;
+    document.body.classList.remove('lightbox-lock');
+    img.removeAttribute('src');
+    if (opener) opener.focus();
+  }
+
+  cards.forEach(function(card, i) {
+    card.addEventListener('click', function(e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      open(i);
+    });
+  });
+  box.addEventListener('click', function(e) {
+    var act = e.target.closest('[data-lb]');
+    if (act) {
+      var a = act.getAttribute('data-lb');
+      if (a === 'close') close();
+      else show(current + (a === 'next' ? 1 : -1));
+    } else if (e.target === scroller || e.target === status) {
+      close();
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (!box.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(current + 1);
+    else if (e.key === 'ArrowLeft') show(current - 1);
+  });
+})();
 </script>
 
 <script>
